@@ -1,9 +1,10 @@
-# Project Title
+# CodeType
 
 ## Site Link 📡
 
 ## Summary 📖
 ### About
+CodeType helps programmers become more efficient by improving typing speeds.
 
 ### Wiki Links
 - [Home](https://github.com/walkerwilliamsx/my-capstone/wiki)
