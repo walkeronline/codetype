@@ -1,6 +1,6 @@
 # CodeType
 
-## Site Link 📡
+## [Live Link](https://codetype.herokuapp.com/) 📡
 
 ## Summary 📖
 ### About
