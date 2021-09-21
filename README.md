@@ -4,6 +4,7 @@
 
 ## Summary 📖
 ### About
+CodeType was made to improve programmers typing speeds.
 
 ### Wiki Links
 - [Home](https://github.com/walkerwilliamsx/my-capstone/wiki)
