@@ -4,7 +4,7 @@
 
 ## Summary 📖
 ### About
-CodeType was made to improve programmers typing speeds.
+CodeType helps programmers become more efficient by improving typing speeds.
 
 ### Wiki Links
 - [Home](https://github.com/walkerwilliamsx/my-capstone/wiki)
