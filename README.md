@@ -1,4 +1,4 @@
-# Project Title
+# CodeType
 
 ## Site Link 📡
 
