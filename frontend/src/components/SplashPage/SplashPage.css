@@ -1,0 +1,23 @@
+.main-splash-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	text-align: center;
+
+	width: 40%;
+	position: absolute;
+	top: 20%;
+	left: 30%;
+}
+
+.motto {
+	font-weight: 800;
+	font-size: 52px;
+	margin-bottom: 10px;
+}
+
+.sub-motto {
+	font-size: 24px;
+}

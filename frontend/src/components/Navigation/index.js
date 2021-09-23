@@ -31,7 +31,7 @@ function Navigation({ isLoaded }) {
 	}
 
 	return (
-		<div class="nav-container">
+		<div className="nav-container">
 			<NavLink className="hero-logo" exact to="/">
 				CodeType
 			</NavLink>

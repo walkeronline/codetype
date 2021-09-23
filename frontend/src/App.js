@@ -6,6 +6,7 @@ import SignupFormPage from './components/SignupFormPage';
 import * as sessionActions from './store/session';
 import Navigation from './components/Navigation';
 import { Modal } from './context/Modal';
+import SplashPage from './components/SplashPage';
 function App() {
 	const dispatch = useDispatch();
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -25,9 +26,9 @@ function App() {
       )} */}
 			{isLoaded && (
 				<Switch>
-					{/* <Route path="/login" >
-            <LoginFormPage />
-          </Route> */}
+					<Route exact path="/">
+						<SplashPage />
+					</Route>
 					<Route path="/signup">
 						<SignupFormPage />
 					</Route>
