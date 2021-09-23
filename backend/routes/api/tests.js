@@ -6,7 +6,7 @@ const { Test, sequelize } = require('../../db/models');
 const router = express.Router();
 
 router.get(
-	'/',
+	'/random',
 	asyncHandler(async (req, res) => {
 		const randomTest = await Test.findOne({
 			order: [[sequelize.fn('RANDOM')]],

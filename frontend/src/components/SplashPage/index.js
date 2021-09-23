@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import './SplashPage.css';
 
 function SplashPage() {
-	const [test, setTest] = useState('');
+	const [test, setTest] = useState(null);
 
-	// useEffect(() => {
-	// 	const getTest = async () => {
-	// 		const test = await fetch('http://localhost:5000/api/tests');
-	// 		return JSON.parse(test);
-	// 	};
-	// 	setTest(getTest());
-	// 	console.log(test);
-	// }, []);
+	useEffect(() => {
+		async function getTest() {
+			const response = await fetch('/api/tests/random');
+			const data = await response.json();
+			console.log(data);
+			setTest(data);
+		}
+		getTest();
+	}, []);
 
 	return (
 		<>
@@ -24,6 +26,13 @@ function SplashPage() {
 					tellus, vel euismod velit neque quis massa.
 				</div>
 			</div>
+			{/* {test && (
+				<div className="test-example-container">
+					<h2>Try It Out:</h2>
+					<div className="test-area"></div>
+					<div>{test.randomTest.body}</div>
+				</div>
+			)} */}
 		</>
 	);
 }

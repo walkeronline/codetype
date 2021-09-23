@@ -7,6 +7,7 @@ import * as sessionActions from './store/session';
 import Navigation from './components/Navigation';
 import { Modal } from './context/Modal';
 import SplashPage from './components/SplashPage';
+import TestPage from './components/TestPage';
 function App() {
 	const dispatch = useDispatch();
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -28,6 +29,9 @@ function App() {
 				<Switch>
 					<Route exact path="/">
 						<SplashPage />
+					</Route>
+					<Route exact path="/test">
+						<TestPage />
 					</Route>
 					<Route path="/signup">
 						<SignupFormPage />

@@ -1,0 +1,56 @@
+.test-box {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	top: 25%;
+	left: 0;
+	width: 100vw;
+}
+
+.test-body-container {
+	background: white;
+	height: 33vh;
+	width: 800px;
+	color: #595959;
+	border-radius: 20px;
+	display: flex;
+	flex-direction: row;
+}
+
+.user-input {
+	width: 800px;
+	border-radius: 10px;
+	border: none;
+	height: 60px;
+	background: #2241f2;
+	text-align: center;
+	font-size: 24px;
+	position: relative;
+	bottom: 60px;
+	color: #fff;
+}
+
+.user-input::placeholder {
+	color: #fff;
+}
+
+.user-input:focus {
+	border: none;
+	outline: none;
+}
+
+div.active {
+	color: #2241f2;
+	margin: 10px 5px;
+	font-size: 24px;
+	height: 40px;
+}
+
+div.inactive {
+	color: #595959;
+	margin: 10px 5px;
+	font-size: 24px;
+	height: 40px;
+}
