@@ -6,6 +6,44 @@ function TestPage() {
 	const [input, setInput] = useState('');
 	const [activeId, setActiveId] = useState(0);
 
+	const convertStr = (str, i) => {
+		if (i > 0 && test.randomTest.body.split(' ')[i - 1] === '{') {
+			if (i === activeId) {
+				return (
+					<>
+						<br />
+						<div id={i} className="active">
+							{str}
+						</div>
+					</>
+				);
+			} else {
+				return (
+					<>
+						<br />
+						<div id={i} className="inactive">
+							{str}
+						</div>
+					</>
+				);
+			}
+		} else {
+			if (i === activeId) {
+				return (
+					<div id={i} className="active">
+						{str}
+					</div>
+				);
+			} else {
+				return (
+					<div id={i} className="inactive">
+						{str}
+					</div>
+				);
+			}
+		}
+	};
+
 	useEffect(() => {
 		async function getTest() {
 			const response = await fetch('/api/tests/random');
@@ -37,43 +75,9 @@ function TestPage() {
 				<div className="test-box">
 					<h2>{test.randomTest.title}</h2>
 					<div className="test-body-container">
-						{test.randomTest.body.split(' ').map((str, i) => {
-							if (i > 0 && test.randomTest.body.split(' ')[i - 1] === '{') {
-								if (i === activeId) {
-									return (
-										<>
-											<br />
-											<div id={i} className="active">
-												{str}
-											</div>
-										</>
-									);
-								} else {
-									return (
-										<>
-											<br />
-											<div id={i} className="inactive">
-												{str}
-											</div>
-										</>
-									);
-								}
-							} else {
-								if (i === activeId) {
-									return (
-										<div id={i} className="active">
-											{str}
-										</div>
-									);
-								} else {
-									return (
-										<div id={i} className="inactive">
-											{str}
-										</div>
-									);
-								}
-							}
-						})}
+						{test.randomTest.body
+							.split(' ')
+							.map((str, i) => convertStr(str, i))}
 					</div>
 					<div className="input-container">
 						<input
