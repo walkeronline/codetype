@@ -5,31 +5,39 @@ import ProfileButton from './ProfileButton';
 import LoginFormModal from '../LoginFormModal';
 import './Navigation.css';
 
-function Navigation({ isLoaded }){
-  const sessionUser = useSelector(state => state.session.user);
+function Navigation({ isLoaded }) {
+	const sessionUser = useSelector((state) => state.session.user);
 
-  let sessionLinks;
-  if (sessionUser) {
-    sessionLinks = (
-      <ProfileButton user={sessionUser} />
-    );
-  } else {
-    sessionLinks = (
-      <>
-        <LoginFormModal />
-        <NavLink to="/signup">Sign Up</NavLink>
-      </>
-    );
-  }
+	let sessionLinks;
+	if (sessionUser) {
+		sessionLinks = (
+			<li>
+				<ProfileButton user={sessionUser} />
+			</li>
+		);
+	} else {
+		sessionLinks = (
+			<>
+				<li>
+					<NavLink className="sign-up" to="/signup">
+						Sign Up
+					</NavLink>
+				</li>
+				<li>
+					<LoginFormModal />
+				</li>
+			</>
+		);
+	}
 
-  return (
-    <ul>
-      <li>
-        <NavLink exact to="/">Home</NavLink>
-        {isLoaded && sessionLinks}
-      </li>
-    </ul>
-  );
+	return (
+		<div className="nav-container">
+			<NavLink className="hero-logo" exact to="/">
+				CodeType
+			</NavLink>
+			<ul className="links">{isLoaded && sessionLinks}</ul>
+		</div>
+	);
 }
 
 export default Navigation;

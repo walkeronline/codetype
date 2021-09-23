@@ -1,18 +1,29 @@
 'use strict';
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-	const userTest = sequelize.define(
-		'userTest',
+	class UserTest extends Model {
+		/**
+		 * Helper method for defining associations.
+		 * This method is not a part of Sequelize lifecycle.
+		 * The `models/index` file will call this method automatically.
+		 */
+		static associate(models) {
+			// define association here
+			UserTest.belongsTo(models.User, { foreignKey: 'userId' });
+		}
+	}
+	UserTest.init(
 		{
-			userId: { allowNull: false, type: DataTypes.INTEGER },
-			testId: { allowNull: false, type: DataTypes.INTEGER },
-			wpm: { allowNull: false, type: DataTypes.INTEGER },
-			accuracy: { allowNull: false, type: DataTypes.INTEGER },
-			time: { allowNull: false, type: DataTypes.INTEGER },
+			userId: DataTypes.INTEGER,
+			testId: DataTypes.INTEGER,
+			wpm: DataTypes.INTEGER,
+			accuracy: DataTypes.INTEGER,
+			time: DataTypes.INTEGER,
 		},
-		{}
+		{
+			sequelize,
+			modelName: 'UserTest',
+		}
 	);
-	userTest.associate = function (models) {
-		// associations can be defined here
-	};
-	return userTest;
+	return UserTest;
 };

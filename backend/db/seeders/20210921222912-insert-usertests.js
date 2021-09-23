@@ -9,7 +9,7 @@ module.exports = {
       Example:
       */
 		return queryInterface.bulkInsert(
-			'userTests',
+			'UserTests',
 			[
 				{
 					userId: 2,
@@ -44,7 +44,7 @@ module.exports = {
 
       Example:
       */
-		return queryInterface.bulkDelete('userTests', null, {
+		return queryInterface.bulkDelete('UserTests', null, {
 			truncate: true,
 			cascade: true,
 			restartIdentity: true,
