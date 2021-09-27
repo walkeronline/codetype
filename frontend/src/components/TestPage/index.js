@@ -16,9 +16,12 @@ function TestPage() {
 	const [activeId, setActiveId] = useState(0);
 	const [correctIDs, setCorrectIDs] = useState([]);
 	const [incorrectIDs, setIncorrectIDs] = useState([]);
-	const [timeSeconds, setTimeSeconds] = useState(0);
+	const [timeSeconds, setTimeSeconds] = useState(null);
 	const [wpm, setWPM] = useState(null);
-	const [timer, setTimer] = useState(null);
+	const [accuracy, setAccuracy] = useState(null);
+	const [timer, setTimer] = useState(0);
+	const [start, setStart] = useState(0);
+	const [hasStarted, setHasStarted] = useState(false);
 
 	const getClass = (id) => {
 		if (correctIDs.indexOf(id) > -1) {
@@ -46,12 +49,6 @@ function TestPage() {
 		}
 	};
 
-	const addTime = () => {
-		const seconds = timeSeconds + 1;
-		setTimeSeconds(seconds);
-		console.log(seconds);
-	};
-
 	const handleDelete = (e) => {
 		e.preventDefault();
 		const id = e.target.id.split('-')[1];
@@ -74,28 +71,17 @@ function TestPage() {
 		async function getTest() {
 			const response = await fetch('/api/tests/random');
 			const data = await response.json();
-			console.log(data);
 			setTest(data);
 		}
 		getTest();
 	}, []);
 
-	// useEffect(() => {
-	// 	if (test?.randomTest?.body) {
-	// 		const clone = { ...test };
-	// 		clone.randomTest.body = clone.randomTest.body.replaceAll('{', 'EE');
-	// 		setTest(clone);
-	// 	}
-	// }, []);
-
 	useEffect(() => {
-		if (activeId === 0 && input.length === 1) {
-      // Try shorter interval
-      // Key Down instead of useEffect
-			setTimer(setInterval(addTime, 1000));
-		}
-
 		if (input[input.length - 1] === ' ') {
+			if (activeId >= test?.randomTest?.body.split(' ').length) {
+				// Test is done
+				return;
+			}
 			const currentWord = document.getElementById(activeId);
 
 			if (currentWord.innerText === input.trim()) {
@@ -106,7 +92,7 @@ function TestPage() {
 			setInput('');
 			setActiveId(activeId + 1);
 		}
-	}, [input]);
+	}, [activeId, correctIDs, incorrectIDs, input]);
 
 	return (
 		<>
@@ -127,7 +113,12 @@ function TestPage() {
 							type="text"
 							placeholder={!activeId ? 'Type here' : ''}
 						></input>
-						<div className="temp-seconds">{timeSeconds}</div>
+						<div className="temp-seconds">Time: {timeSeconds}</div>
+						<div className="temp-wpm">WPM: {wpm}</div>
+						<div className="temp-accuracy">Accuracy: {accuracy}</div>
+						<div className="temp-progress">
+							Progress: {activeId}/{test.randomTest.body.split(' ').length}
+						</div>
 					</div>
 					{sessionUser?.id === test?.randomTest?.userId && (
 						<>
