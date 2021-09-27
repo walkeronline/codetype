@@ -13,6 +13,7 @@ function TestPage() {
 	const history = useHistory();
 	const [test, setTest] = useState(null);
 	const [input, setInput] = useState('');
+	const [spaces, setSpaces] = useState(0);
 	const [activeId, setActiveId] = useState(0);
 	const [correctIDs, setCorrectIDs] = useState([]);
 	const [incorrectIDs, setIncorrectIDs] = useState([]);
@@ -20,7 +21,7 @@ function TestPage() {
 	const [wpm, setWPM] = useState(null);
 	const [accuracy, setAccuracy] = useState(null);
 	const [timer, setTimer] = useState(0);
-	const [start, setStart] = useState(0);
+	const [startTime, setStartTime] = useState(null);
 	const [hasStarted, setHasStarted] = useState(false);
 
 	const getClass = (id) => {
@@ -77,12 +78,61 @@ function TestPage() {
 	}, []);
 
 	useEffect(() => {
+		const calcAverageWord = () => {
+			const correctWords = test?.randomTest?.body
+				.split(' ')
+				.filter((str, idx) => correctIDs.indexOf(idx) > -1);
+			const correctCharCount = correctWords?.reduce(
+				(sum, str) => sum + str.length,
+				0
+			);
+			return correctCharCount;
+		};
+
+		calcAverageWord();
+		setWPM(((calcAverageWord() + spaces) * (60 / timeSeconds)) / 5);
+	}, [spaces, timeSeconds]);
+
+	// useEffect(() => {
+	// 	setStartTime(Date.now());
+	// }, [hasStarted]);
+
+	useEffect(() => {
+		const updateTime = () => {
+			setTimeSeconds((Date.now() - startTime) / 1000);
+		};
+
+		if (input.length > 0 && !hasStarted) {
+			const interval = setInterval(updateTime, 100);
+
+			setTimer(interval);
+			setAccuracy(0);
+			setHasStarted(true);
+		}
+	}, [input, hasStarted, startTime]);
+
+	useEffect(() => {
+		const now = Date.now();
+		if (input.length > 0 && !startTime) {
+			console.log('HIT!');
+			setStartTime(now);
+			console.log(startTime);
+		}
+	}, [input, startTime]);
+
+	useEffect(() => {
 		if (input[input.length - 1] === ' ') {
-			if (activeId >= test?.randomTest?.body.split(' ').length) {
+			const currentWord = document.getElementById(activeId);
+			if (activeId >= test?.randomTest?.body.split(' ').length - 1) {
 				// Test is done
+				if (currentWord.innerText === input.trim()) {
+					setCorrectIDs([...correctIDs, activeId]);
+				} else {
+					setIncorrectIDs([...incorrectIDs.values(), activeId]);
+				}
+				clearInterval(timer);
 				return;
 			}
-			const currentWord = document.getElementById(activeId);
 
 			if (currentWord.innerText === input.trim()) {
 				setCorrectIDs([...correctIDs, activeId]);
@@ -90,9 +140,10 @@ function TestPage() {
 				setIncorrectIDs([...incorrectIDs.values(), activeId]);
 			}
 			setInput('');
+			setSpaces(spaces + 1);
 			setActiveId(activeId + 1);
 		}
-	}, [activeId, correctIDs, incorrectIDs, input]);
+	}, [input]);
 
 	return (
 		<>
