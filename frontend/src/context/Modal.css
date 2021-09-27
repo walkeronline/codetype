@@ -1,24 +1,38 @@
 #modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 #modal-background {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.7);
 }
 
 #modal-content {
-  position: absolute;
-  background-color:white;
+	position: absolute;
+	background-color: white;
+}
+
+.btn {
+	border: none;
+	background: #2241f2;
+	color: #f2f2f2;
+	border-radius: 15px;
+	padding: 6px 15px;
+	font-size: 16px;
+	margin: 5px 10px;
+}
+
+.btn:hover {
+	cursor: pointer;
 }
