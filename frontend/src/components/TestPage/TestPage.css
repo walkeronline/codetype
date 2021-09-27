@@ -54,3 +54,11 @@ div.inactive {
 	font-size: 24px;
 	height: 40px;
 }
+
+div.correct {
+	color: green;
+}
+
+div.incorrect {
+	color: red;
+}
