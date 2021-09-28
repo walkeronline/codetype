@@ -21,7 +21,7 @@ function TestPage() {
 	const [wpm, setWPM] = useState(null);
 	const [accuracy, setAccuracy] = useState(null);
 	const [timer, setTimer] = useState(0);
-	const [startTime, setStartTime] = useState(null);
+	const [startTime, setStartTime] = useState(Date.now());
 	const [hasStarted, setHasStarted] = useState(false);
 
 	const getClass = (id) => {
@@ -108,17 +108,19 @@ function TestPage() {
 			setTimer(interval);
 			setAccuracy(0);
 			setHasStarted(true);
+			setStartTime(20);
+			console.log(accuracy, hasStarted, startTime, timer);
 		}
-	}, [input, hasStarted, startTime]);
+	}, [input, hasStarted, startTime, accuracy, timer]);
 
-	useEffect(() => {
-		const now = Date.now();
-		if (input.length > 0 && !startTime) {
-			console.log('HIT!');
-			setStartTime(now);
-			console.log(startTime);
-		}
-	}, [input, startTime]);
+	// useEffect(() => {
+	// 	const now = Date.now();
+	// 	if (input.length > 0 && !startTime) {
+	// 		console.log('HIT!');
+	// 		setStartTime(now);
+	// 		console.log(startTime);
+	// 	}
+	// }, [input, startTime]);
 
 	useEffect(() => {
 		if (input[input.length - 1] === ' ') {
@@ -142,6 +144,7 @@ function TestPage() {
 			setInput('');
 			setSpaces(spaces + 1);
 			setActiveId(activeId + 1);
+			return;
 		}
 	}, [input]);
 
@@ -166,7 +169,7 @@ function TestPage() {
 						></input>
 						<div className="temp-seconds">Time: {timeSeconds}</div>
 						<div className="temp-wpm">WPM: {wpm}</div>
-						<div className="temp-accuracy">Accuracy: {accuracy}</div>
+						{/* <div className="temp-accuracy">Accuracy: {accuracy}</div> */}
 						<div className="temp-progress">
 							Progress: {activeId}/{test.randomTest.body.split(' ').length}
 						</div>
