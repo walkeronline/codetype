@@ -13,12 +13,16 @@ function TestPage() {
 	const history = useHistory();
 	const [test, setTest] = useState(null);
 	const [input, setInput] = useState('');
+	const [spaces, setSpaces] = useState(0);
 	const [activeId, setActiveId] = useState(0);
 	const [correctIDs, setCorrectIDs] = useState([]);
 	const [incorrectIDs, setIncorrectIDs] = useState([]);
-	const [timeSeconds, setTimeSeconds] = useState(0);
+	const [timeSeconds, setTimeSeconds] = useState(null);
 	const [wpm, setWPM] = useState(null);
-	const [timer, setTimer] = useState(null);
+	const [accuracy, setAccuracy] = useState(null);
+	const [timer, setTimer] = useState(0);
+	const [startTime, setStartTime] = useState(Date.now());
+	const [hasStarted, setHasStarted] = useState(false);
 
 	const getClass = (id) => {
 		if (correctIDs.indexOf(id) > -1) {
@@ -46,12 +50,6 @@ function TestPage() {
 		}
 	};
 
-	const addTime = () => {
-		const seconds = timeSeconds + 1;
-		setTimeSeconds(seconds);
-		console.log(seconds);
-	};
-
 	const handleDelete = (e) => {
 		e.preventDefault();
 		const id = e.target.id.split('-')[1];
@@ -74,29 +72,69 @@ function TestPage() {
 		async function getTest() {
 			const response = await fetch('/api/tests/random');
 			const data = await response.json();
-			console.log(data);
 			setTest(data);
 		}
 		getTest();
 	}, []);
 
+	useEffect(() => {
+		const calcAverageWord = () => {
+			const correctWords = test?.randomTest?.body
+				.split(' ')
+				.filter((str, idx) => correctIDs.indexOf(idx) > -1);
+			const correctCharCount = correctWords?.reduce(
+				(sum, str) => sum + str.length,
+				0
+			);
+			return correctCharCount;
+		};
+
+		calcAverageWord();
+		setWPM(((calcAverageWord() + spaces) * (60 / timeSeconds)) / 5);
+	}, [spaces, timeSeconds]);
+
 	// useEffect(() => {
-	// 	if (test?.randomTest?.body) {
-	// 		const clone = { ...test };
-	// 		clone.randomTest.body = clone.randomTest.body.replaceAll('{', 'EE');
-	// 		setTest(clone);
-	// 	}
-	// }, []);
+	// 	setStartTime(Date.now());
+	// }, [hasStarted]);
 
 	useEffect(() => {
-		if (activeId === 0 && input.length === 1) {
-      // Try shorter interval
-      // Key Down instead of useEffect
-			setTimer(setInterval(addTime, 1000));
-		}
+		const updateTime = () => {
+			setTimeSeconds((Date.now() - startTime) / 1000);
+		};
 
+		if (input.length > 0 && !hasStarted) {
+			const interval = setInterval(updateTime, 100);
+
+			setTimer(interval);
+			setAccuracy(0);
+			setHasStarted(true);
+			setStartTime(20);
+			console.log(accuracy, hasStarted, startTime, timer);
+		}
+	}, [input, hasStarted, startTime, accuracy, timer]);
+
+	// useEffect(() => {
+	// 	const now = Date.now();
+	// 	if (input.length > 0 && !startTime) {
+	// 		console.log('HIT!');
+	// 		setStartTime(now);
+	// 		console.log(startTime);
+	// 	}
+	// }, [input, startTime]);
+
+	useEffect(() => {
 		if (input[input.length - 1] === ' ') {
 			const currentWord = document.getElementById(activeId);
+			if (activeId >= test?.randomTest?.body.split(' ').length - 1) {
+				// Test is done
+				if (currentWord.innerText === input.trim()) {
+					setCorrectIDs([...correctIDs, activeId]);
+				} else {
+					setIncorrectIDs([...incorrectIDs.values(), activeId]);
+				}
+				clearInterval(timer);
+				return;
+			}
 
 			if (currentWord.innerText === input.trim()) {
 				setCorrectIDs([...correctIDs, activeId]);
@@ -104,7 +142,9 @@ function TestPage() {
 				setIncorrectIDs([...incorrectIDs.values(), activeId]);
 			}
 			setInput('');
+			setSpaces(spaces + 1);
 			setActiveId(activeId + 1);
+			return;
 		}
 	}, [input]);
 
@@ -127,7 +167,12 @@ function TestPage() {
 							type="text"
 							placeholder={!activeId ? 'Type here' : ''}
 						></input>
-						<div className="temp-seconds">{timeSeconds}</div>
+						<div className="temp-seconds">Time: {timeSeconds}</div>
+						<div className="temp-wpm">WPM: {wpm}</div>
+						{/* <div className="temp-accuracy">Accuracy: {accuracy}</div> */}
+						<div className="temp-progress">
+							Progress: {activeId}/{test.randomTest.body.split(' ').length}
+						</div>
 					</div>
 					{sessionUser?.id === test?.randomTest?.userId && (
 						<>

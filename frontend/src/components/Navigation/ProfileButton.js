@@ -30,8 +30,8 @@ function ProfileButton({ user }) {
 
 	return (
 		<>
-			<button class="btn" onClick={openMenu}>
-				<i class="fas fa-user"></i>
+			<button className="btn" onClick={openMenu}>
+				<i className="fas fa-user"></i>
 			</button>
 			{showMenu && (
 				<ul className="profile-dropdown">

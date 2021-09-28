@@ -1,0 +1,107 @@
+.friend-image {
+	width: 50px;
+	height: auto;
+	border-radius: 100%;
+}
+
+.friends-list-header {
+	/* margin-bottom: 15px; */
+	height: 50px;
+}
+
+.friends-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	/* margin-bottom: 20px; */
+}
+
+.fa-plus {
+	cursor: pointer;
+	height: 50px;
+}
+
+.friends-list {
+	overflow-y: scroll;
+	overflow-x: hidden;
+
+	display: flex;
+	flex-direction: column;
+	height: 50vh;
+}
+
+.friends-container {
+	position: absolute;
+	right: 10px;
+	bottom: 0;
+	width: 300px;
+	background: #0d0d0d;
+	margin: 20px 10px 0px 10px;
+	padding: 20px 15px 0px 15px;
+	border-radius: 20px 20px 0px 0px;
+}
+
+.friend-name {
+	display: flex;
+	flex-direction: row;
+	height: 50px;
+	margin: 10px 0px;
+	text-decoration: none;
+}
+
+.friend-name:hover {
+	animation: tab-left 1s ease-in 0s 1 forwards paused;
+}
+
+.friend-username {
+	margin-left: 8px;
+	margin-top: 12px;
+	color: rgb(94, 125, 242);
+	text-decoration: none;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(34, 65, 242, 0.33);
+	border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	cursor: pointer;
+	background-color: rgba(34, 65, 242, 1);
+	transition: background-color 3s;
+}
+
+.custom-spacing {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-right: 10px;
+}
+
+.fa-minus-square {
+	color: red;
+	visibility: hidden;
+}
+
+.fa-minus-square:hover {
+	cursor: pointer;
+}
+
+@keyframes tab-left {
+	0% {
+		transform: translateX(0px);
+		background: transparent;
+	}
+	100% {
+		transform: translateX((10px));
+		background: red;
+	}
+}
