@@ -8,6 +8,7 @@ import Navigation from './components/Navigation';
 import { Modal } from './context/Modal';
 import SplashPage from './components/SplashPage';
 import TestPage from './components/TestPage';
+import Friends from './components/Friends';
 function App() {
 	const dispatch = useDispatch();
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -32,7 +33,9 @@ function App() {
 					</Route>
 					<Route exact path="/test">
 						<TestPage />
+						<Friends />
 					</Route>
+					<Route path="/friends"></Route>
 					<Route path="/signup">
 						<SignupFormPage />
 					</Route>

@@ -1,7 +1,7 @@
 const express = require('express');
 const asyncHandler = require('express-async-handler');
 
-const { Friend, sequelize } = require('../../db/models');
+const { Friend, User, sequelize } = require('../../db/models');
 
 const router = express.Router();
 
@@ -13,8 +13,9 @@ router.get(
 			where: {
 				userId: Number(userId),
 			},
+			include: [{ model: User, as: 'friend' }],
 		});
-		console.log(friends);
+		console.log(userId);
 		return res.json(friends);
 	})
 );
