@@ -20,4 +20,16 @@ router.get(
 	})
 );
 
+router.delete(
+	'/',
+	asyncHandler(async (req, res) => {
+		const { id } = req.body;
+		const friend = await Friend.findByPk(id);
+		await friend.destroy();
+		return res.json({
+			friend,
+		});
+	})
+);
+
 module.exports = router;

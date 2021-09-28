@@ -1,0 +1,11 @@
+.confirm-remove-friend-modal * {
+	color: #000;
+}
+
+.btn {
+	color: #fff;
+}
+
+.btn.red {
+	background: red;
+}

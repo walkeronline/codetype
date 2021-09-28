@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import ConfirmRemoveFriendModal from '../ConfirmRemoveFriendModal';
+
 import './Friends.css';
 
 function Friends() {
@@ -13,6 +15,13 @@ function Friends() {
 		return friend?.friend?.imageUrl
 			? friend.friend.imageUrl
 			: 'https://lh3.googleusercontent.com/Q3TExTusD0FdRQL-Y_sobhGB09x-Bw-kMsSsd2Y1RpXu91XMbyAxNqBgPFWEEWlVYhvR5xTKHGP3CvhLjiwgyE-cr-w_p42M54W55w=w600';
+	};
+
+	const changeVis = (id, type) => {
+		const removeButton = document.querySelector(`#f-${id}`);
+		if (removeButton) {
+			removeButton.style.visibility = type === 0 ? 'visible' : 'hidden';
+		}
 	};
 
 	useEffect(() => {
@@ -33,15 +42,32 @@ function Friends() {
 			<div className="friends-list">
 				{friends.length &&
 					friends.map((friend) => (
-						<div className="friend-info">
-							<Link className="friend-name" to={`/users/${friend?.id}`}>
-								<img
-									className="friend-image"
-									src={checkProfile(friend)}
-									alt={`${friend?.friend?.username}'s profile`}
-								/>
-								<h3 className="friend-username">{friend?.friend?.username}</h3>
-							</Link>
+						<div
+							className="custom-spacing"
+							onMouseEnter={(e) => changeVis(friend?.friend?.id, 0)}
+							onMouseLeave={(e) => changeVis(friend?.friend?.id, 1)}
+							key={friend.id}
+						>
+							<div className="friend-info">
+								<Link
+									className="friend-name"
+									to={`/users/${friend?.friend?.id}`}
+								>
+									<img
+										className="friend-image"
+										src={checkProfile(friend)}
+										alt={`${friend?.friend?.username}'s profile`}
+									/>
+									<h3 className="friend-username">
+										{friend?.friend?.username}
+									</h3>
+								</Link>
+							</div>
+							<ConfirmRemoveFriendModal
+								friend={friend}
+								setFriends={setFriends}
+								friends={friends}
+							/>
 						</div>
 					))}
 			</div>

@@ -79,6 +79,22 @@
 	transition: background-color 3s;
 }
 
+.custom-spacing {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-right: 10px;
+}
+
+.fa-minus-square {
+	color: red;
+	visibility: hidden;
+}
+
+.fa-minus-square:hover {
+	cursor: pointer;
+}
+
 @keyframes tab-left {
 	0% {
 		transform: translateX(0px);
