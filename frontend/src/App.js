@@ -33,7 +33,6 @@ function App() {
 					</Route>
 					<Route exact path="/test">
 						<TestPage />
-						<Friends />
 					</Route>
 					<Route path="/friends"></Route>
 					<Route path="/signup">

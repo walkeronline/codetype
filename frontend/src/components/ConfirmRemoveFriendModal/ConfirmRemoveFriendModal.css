@@ -9,3 +9,12 @@
 .btn.red {
 	background: red;
 }
+
+.buttons-container {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.buttons-container > * {
+	margin-top: 15px;
+}

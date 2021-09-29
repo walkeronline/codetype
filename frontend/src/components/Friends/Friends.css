@@ -32,6 +32,7 @@
 
 .friends-container {
 	position: absolute;
+	z-index: 1000;
 	right: 10px;
 	bottom: 0;
 	width: 300px;
@@ -93,6 +94,46 @@
 
 .fa-minus-square:hover {
 	cursor: pointer;
+}
+
+.menu-expand {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
+}
+
+.menu-expand:hover {
+	cursor: pointer;
+}
+
+.opened {
+	animation: slide-up 1s forwards;
+}
+
+.closed {
+	animation: slide-down 1s forwards;
+}
+
+.start {
+	transform: translateY(57vh);
+}
+
+@keyframes slide-up {
+	0% {
+		transform: translateY(57vh);
+	}
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+@keyframes slide-down {
+	0% {
+		transform: translateY(0px);
+	}
+	100% {
+		transform: translateY(57vh);
+	}
 }
 
 @keyframes tab-left {

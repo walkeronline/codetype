@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import AddFriendModal from '../AddFriendModal';
 
 import ConfirmRemoveFriendModal from '../ConfirmRemoveFriendModal';
 
@@ -9,12 +10,37 @@ import './Friends.css';
 function Friends() {
 	const sessionUser = useSelector((state) => state.session.user);
 
-	const [friends, setFriends] = useState([]);
+	const [friends, setFriends] = useState(null);
+	const [showMenu, setShowMenu] = useState(false);
 
 	const checkProfile = (friend) => {
 		return friend?.friend?.imageUrl
 			? friend.friend.imageUrl
 			: 'https://lh3.googleusercontent.com/Q3TExTusD0FdRQL-Y_sobhGB09x-Bw-kMsSsd2Y1RpXu91XMbyAxNqBgPFWEEWlVYhvR5xTKHGP3CvhLjiwgyE-cr-w_p42M54W55w=w600';
+	};
+
+	const getIcon = () => {
+		if (showMenu) {
+			return <i className="fas fa-sort-down"></i>;
+		}
+		return <i className="fas fa-sort-up"></i>;
+	};
+
+	const toggleMenu = () => {
+		const friendsList = document.querySelector('.friends-container');
+		const friendClass = friendsList.className;
+		setShowMenu(!showMenu);
+
+		if (friendClass.includes('opened')) {
+			friendsList.className = 'friends-container closed';
+		} else if (
+			friendClass.includes('closed') ||
+			friendClass.includes('start')
+		) {
+			friendsList.className = 'friends-container opened';
+		} else {
+			friendsList.className += ' opened';
+		}
 	};
 
 	const changeVis = (id, type) => {
@@ -34,13 +60,16 @@ function Friends() {
 	}, [sessionUser]);
 
 	return (
-		<div className="friends-container">
+		<div className="friends-container start">
+			<div className="menu-expand" onClick={toggleMenu}>
+				{getIcon()}
+			</div>
 			<div className="friends-header">
 				<h2 className="friends-list-header">Friends List</h2>
-				<i className="fas fa-plus"></i>
+				<AddFriendModal friends={friends} setFriends={setFriends} />
 			</div>
 			<div className="friends-list">
-				{friends.length &&
+				{friends &&
 					friends.map((friend) => (
 						<div
 							className="custom-spacing"

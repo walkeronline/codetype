@@ -23,6 +23,11 @@
 	background-color: white;
 	border-radius: 20px;
 	padding: 20px;
+	animation: transform-up 0.3s;
+}
+
+#modal-content *:not(.btn):not(li) {
+	color: #000;
 }
 
 .btn {
@@ -35,6 +40,23 @@
 	margin: 5px 10px;
 }
 
+.btn.white {
+	background: #f2f2f2;
+	border: 1px solid #000;
+	color: #000;
+}
+
 .btn:hover {
 	cursor: pointer;
+}
+
+@keyframes transform-up {
+	0% {
+		opacity: 0%;
+		transform: translateY(1000px);
+	}
+	100% {
+		opacity: 100%;
+		transform: translateY(0px);
+	}
 }

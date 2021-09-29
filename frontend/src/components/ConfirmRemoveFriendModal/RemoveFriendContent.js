@@ -29,12 +29,14 @@ function RemoveFriendContent({ onClose, friend, friends, setFriends }) {
 		<div className="confirm-remove-friend-modal">
 			<h2>{`Remove '${friend?.friend?.username}'`}</h2>
 			<h4>{`Are you sure you want to remove ${friend?.friend?.username} from your friends list?`}</h4>
-			<button className="btn red" onClick={handleDelete}>
-				Remove Friend
-			</button>
-			<button className="btn" onClick={() => onClose()}>
-				Cancel
-			</button>
+			<div className="buttons-container">
+				<button className="btn white" onClick={() => onClose()}>
+					Cancel
+				</button>
+				<button className="btn red" onClick={handleDelete}>
+					Remove Friend
+				</button>
+			</div>
 		</div>
 	);
 }

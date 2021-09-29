@@ -1,0 +1,8 @@
+.errors-list li.error-text {
+	color: red;
+	list-style: none;
+}
+
+.errors-list li::before {
+	content: '❌';
+}

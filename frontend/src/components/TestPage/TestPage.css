@@ -13,6 +13,8 @@
 	background: white;
 	height: 33vh;
 	width: 800px;
+	overflow: initial;
+	white-space: initial;
 	color: #595959;
 	border-radius: 20px;
 	display: flex;

@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
+import Friends from '../Friends';
 import LoginFormModal from '../LoginFormModal';
 import './Navigation.css';
 
@@ -31,12 +32,15 @@ function Navigation({ isLoaded }) {
 	}
 
 	return (
-		<div className="nav-container">
-			<NavLink className="hero-logo" exact to="/">
-				CodeType
-			</NavLink>
-			<ul className="links">{isLoaded && sessionLinks}</ul>
-		</div>
+		<>
+			<div className="nav-container">
+				<NavLink className="hero-logo" exact to="/">
+					CodeType
+				</NavLink>
+				<ul className="links">{isLoaded && sessionLinks}</ul>
+			</div>
+			{sessionUser && <Friends />}
+		</>
 	);
 }
 

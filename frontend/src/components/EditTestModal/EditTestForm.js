@@ -53,12 +53,12 @@ function EditTestForm({ test }) {
 
 	return (
 		<div className="edit-test-form modal">
-			<h1>Edit Test</h1>
+			<h2>Edit Test</h2>
 			<form onSubmit={handleSubmit}>
 				<ul>
-					{errors.map((error, idx) => {
-						<li key={idx}>{error}</li>;
-					})}
+					{errors.map((error, idx) => (
+						<li key={idx}>{error}</li>
+					))}
 				</ul>
 				<label>
 					Title

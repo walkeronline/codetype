@@ -75,10 +75,10 @@ body {
 }
 
 .hero-logo {
-	animation: slide-down 2s;
+	animation: slide-d 2s;
 }
 
-@keyframes slide-down {
+@keyframes slide-d {
 	0% {
 		opacity: 0%;
 		transform: translateY(-25px);
