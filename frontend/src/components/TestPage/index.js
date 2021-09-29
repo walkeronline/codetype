@@ -154,9 +154,11 @@ function TestPage() {
 				<div className="test-box">
 					<h2>{test.randomTest.title}</h2>
 					<div className="test-body-container">
-						{test.randomTest.body
-							.split(' ')
-							.map((str, i) => convertStr(str, i))}
+						<div className="word-container">
+							{test.randomTest.body
+								.split(' ')
+								.map((str, i) => convertStr(str, i))}
+						</div>
 					</div>
 					<div className="input-container">
 						<input

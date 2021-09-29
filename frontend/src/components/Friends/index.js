@@ -50,6 +50,13 @@ function Friends() {
 		}
 	};
 
+	const getFriend = (friend) => {
+		if (friend?.friend?.username === sessionUser.username) {
+			return friend?.user?.username;
+		}
+		return friend?.friend?.username;
+	};
+
 	useEffect(() => {
 		async function getFriends() {
 			const response = await fetch(`/api/friends/${sessionUser?.id}`);
@@ -87,9 +94,7 @@ function Friends() {
 										src={checkProfile(friend)}
 										alt={`${friend?.friend?.username}'s profile`}
 									/>
-									<h3 className="friend-username">
-										{friend?.friend?.username}
-									</h3>
+									<h3 className="friend-username">{getFriend(friend)}</h3>
 								</Link>
 							</div>
 							<ConfirmRemoveFriendModal
@@ -105,3 +110,12 @@ function Friends() {
 }
 
 export default Friends;
+
+// function niceLoop(arr) {
+// 	let sum = 0;
+// 	for (let i = 0; i < arr.length; i++) {
+// 		sum += arr[i];
+// 	}
+// 	return;
+// 	sum;
+// }

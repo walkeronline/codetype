@@ -9,6 +9,11 @@
 	width: 100vw;
 }
 
+.word-container {
+	display: flex;
+	flex-direction: column;
+}
+
 .test-body-container {
 	background: white;
 	height: 33vh;

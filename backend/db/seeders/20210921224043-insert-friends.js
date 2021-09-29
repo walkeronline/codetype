@@ -4,16 +4,16 @@ const NUM_USERS = 12;
 
 const createFriends = () => {
 	let data = [];
-	for (let i = 1; i <= NUM_USERS; i++) {
-		for (let j = 1; j <= NUM_USERS; j++) {
-			if (i !== j) {
-				data.push({
-					userId: i,
-					friendId: j,
-				});
-			}
-		}
-	}
+	// for (let i = 1; i <= NUM_USERS; i++) {
+	// 	for (let j = 1; j <= NUM_USERS; j++) {
+	// 		if (i !== j) {
+	// 			data.push({
+	// 				userId: i,
+	// 				friendId: j,
+	// 			});
+	// 		}
+	// 	}
+	// }
 	return data;
 };
 
@@ -25,7 +25,11 @@ module.exports = {
 
       Example:
       */
-		return queryInterface.bulkInsert('Friends', createFriends(), {});
+		return queryInterface.bulkInsert(
+			'Friends',
+			[{ userId: 1, friendId: 2 }],
+			{}
+		);
 	},
 
 	down: (queryInterface, Sequelize) => {

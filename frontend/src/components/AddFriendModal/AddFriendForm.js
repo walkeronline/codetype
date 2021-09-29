@@ -26,6 +26,9 @@ function AddFriendForm({ onClose, friends, setFriends }) {
 				setFriends(data.friends);
 				onClose();
 			}
+			if (data?.errors) {
+				setErrors(data.errors);
+			}
 			return data;
 		};
 
