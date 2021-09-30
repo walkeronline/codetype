@@ -66,6 +66,21 @@ body {
 	cursor: pointer;
 }
 
+.btn-big {
+	border: none;
+	background: #2241f2;
+	color: #f2f2f2;
+	border-radius: 15px;
+	padding: 10px 30px;
+	font-size: 20px;
+	margin: 5px 10px;
+	margin-top: 30px;
+}
+
+.btn-big:hover {
+	cursor: pointer;
+}
+
 .sign-up {
 	padding: 6px 15px;
 	font-size: 16px;

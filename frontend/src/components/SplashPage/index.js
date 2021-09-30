@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import SignUpFormModal from '../SignUpFormModal';
 
 import './SplashPage.css';
 
@@ -19,12 +20,17 @@ function SplashPage() {
 	return (
 		<>
 			<div className="main-splash-container">
-				<div className="motto">Lorem ipsum dolor sit amet</div>
-				<div className="sub-motto">
-					Donec non sapien vel elit dignissim porta lacinia semper lacus.
-					Vestibulum pellentesque, nunc in feugiat mollis, ligula dolor vehicula
-					tellus, vel euismod velit neque quis massa.
+				<div id="motto-splash" className="motto hero-logo">
+					CodeType
 				</div>
+				<div className="sub-motto">
+					CodeType helps programmers become more efficient by improving typing
+					speeds.
+				</div>
+				<SignUpFormModal
+					buttonContent={'Get Started Now 🧑‍💻'}
+					buttonClass={'btn-big'}
+				/>
 			</div>
 			{/* {test && (
 				<div className="test-example-container">

@@ -5,7 +5,7 @@ import * as sessionActions from '../../store/session';
 
 import './SignUpFormModal.css';
 
-function SignUpForm() {
+function SignUpForm({ onClose }) {
 	const dispatch = useDispatch();
 	const sessionUser = useSelector((state) => state.session.user);
 	const [email, setEmail] = useState('');
@@ -34,9 +34,10 @@ function SignUpForm() {
 
 	const handleDemo = (e) => {
 		e.preventDefault();
-		return dispatch(
+		dispatch(
 			sessionActions.login({ credential: 'demo', password: 'password' })
 		);
+		onClose();
 	};
 
 	return (
