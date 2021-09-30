@@ -34,10 +34,13 @@ function TestForm() {
 					language,
 					charCount,
 				}),
+			}).catch(async (res) => {
+				const d = await res.json();
+				if (d && d.errors) setErrors(d.errors);
 			});
-			const data = await response.json();
+			const data = await response?.json();
 			if (data?.errors) return setErrors(data.errors);
-			return history.push(`/tests/${data.id}`);
+			if (data?.id) return history.push(`/tests/${data.id}`);
 		};
 
 		const data = submit({
@@ -48,6 +51,11 @@ function TestForm() {
 			charCount,
 		});
 
+		if (data.errors) {
+			console.log(data.errors);
+			setErrors(data.errors);
+		}
+
 		return data;
 	};
 
@@ -55,9 +63,11 @@ function TestForm() {
 		<div className="test-form modal">
 			<h1>Create Test</h1>
 			<form onSubmit={handleSubmit}>
-				<ul>
+				<ul className="errors-list">
 					{errors.map((error, idx) => (
-						<li key={idx}>{error}</li>
+						<li className="error-text" key={idx}>
+							{error}
+						</li>
 					))}
 				</ul>
 				<label>

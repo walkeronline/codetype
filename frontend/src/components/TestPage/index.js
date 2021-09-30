@@ -148,6 +148,10 @@ function TestPage() {
 		}
 	}, [input]);
 
+  useEffect(() => {
+    
+  }, [])
+
 	return (
 		<>
 			{test?.randomTest && (

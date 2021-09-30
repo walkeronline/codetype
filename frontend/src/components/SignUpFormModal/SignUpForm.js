@@ -44,9 +44,11 @@ function SignUpForm({ onClose }) {
 		<>
 			<h1>Sign Up</h1>
 			<form className="sign-up-form" onSubmit={handleSubmit}>
-				<ul>
+      <ul className="errors-list">
 					{errors.map((error, idx) => (
-						<li key={idx}>{error}</li>
+						<li className="error-text" key={idx}>
+							{error}
+						</li>
 					))}
 				</ul>
 				<label>

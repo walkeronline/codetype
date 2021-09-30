@@ -16,8 +16,8 @@ const validateTest = [
 	check('body')
 		.exists({ checkFalsy: true })
 		.withMessage('Please provide a body.')
-		.isLength({ min: 25, max: 1000 })
-		.withMessage('Body must be between 1-1000 characters.'),
+		.isLength({ min: 10, max: 1000 })
+		.withMessage('Body must be between 10-1000 characters.'),
 	check('language')
 		.exists({ checkFalsy: true })
 		.withMessage('Please pick a language.'),
