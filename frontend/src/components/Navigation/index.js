@@ -5,6 +5,7 @@ import ProfileButton from './ProfileButton';
 import Friends from '../Friends';
 import LoginFormModal from '../LoginFormModal';
 import './Navigation.css';
+import SignUpFormModal from '../SignUpFormModal';
 
 function Navigation({ isLoaded }) {
 	const sessionUser = useSelector((state) => state.session.user);
@@ -20,9 +21,7 @@ function Navigation({ isLoaded }) {
 		sessionLinks = (
 			<>
 				<li>
-					<NavLink className="sign-up" to="/signup">
-						Sign Up
-					</NavLink>
+					<SignUpFormModal className="sign-up" />
 				</li>
 				<li>
 					<LoginFormModal />

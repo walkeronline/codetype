@@ -20,10 +20,17 @@ function LoginForm() {
 		);
 	};
 
+	const handleDemo = (e) => {
+		e.preventDefault();
+		return dispatch(
+			sessionActions.login({ credential: 'demo', password: 'password' })
+		);
+	};
+
 	return (
 		<>
 			<h1>Log In</h1>
-			<form onSubmit={handleSubmit}>
+			<form className="log-in-form" onSubmit={handleSubmit}>
 				<ul>
 					{errors.map((error, idx) => (
 						<li key={idx}>{error}</li>
@@ -49,6 +56,9 @@ function LoginForm() {
 				</label>
 				<button className="btn" type="submit">
 					Log In
+				</button>
+				<button onClick={handleDemo} className="btn">
+					Demo
 				</button>
 			</form>
 		</>

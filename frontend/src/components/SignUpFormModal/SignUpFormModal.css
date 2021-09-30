@@ -1,10 +1,10 @@
-.log-in-form {
+.sign-up-form {
 	display: flex;
 	flex-direction: column;
 	width: 300px;
 }
 
-.log-in-form > label {
+.sign-up-form > label {
 	display: flex;
 	flex-direction: column;
 }
