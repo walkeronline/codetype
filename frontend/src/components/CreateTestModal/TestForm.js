@@ -5,7 +5,7 @@ import { Redirect, useHistory } from 'react-router';
 
 import './TestForm.css';
 
-function TestForm() {
+function TestForm({ onClose }) {
 	const sessionUser = useSelector((state) => state.session.user);
 	const history = useHistory();
 	const [title, setTitle] = useState('');
@@ -40,7 +40,10 @@ function TestForm() {
 			});
 			const data = await response?.json();
 			if (data?.errors) return setErrors(data.errors);
-			if (data?.id) return history.push(`/tests/${data.id}`);
+			if (data?.id) {
+				onClose();
+				return history.push(`/test/${data.id}`);
+			}
 		};
 
 		const data = submit({
@@ -81,7 +84,12 @@ function TestForm() {
 				</label>
 				<label>
 					Body
-					<input type="textarea" value={body} onChange={updateBody} required />
+					<textarea
+						className="code-input"
+						value={body}
+						onChange={updateBody}
+						required
+					/>
 				</label>
 				<button className="btn" type="submit btn">
 					Create

@@ -59,10 +59,10 @@ function LoginForm() {
 				<button className="btn" type="submit">
 					Log In
 				</button>
-				<button onClick={handleDemo} className="btn">
-					Demo
-				</button>
 			</form>
+			<button onClick={handleDemo} className="btn">
+				Demo
+			</button>
 		</>
 	);
 }

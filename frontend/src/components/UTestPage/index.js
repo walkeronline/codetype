@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { csrfFetch } from '../../store/csrf';
-import { Redirect, useHistory } from 'react-router';
+import { Redirect, useHistory, useParams } from 'react-router';
 
-import './TestPage.css';
+import './UTestPage.css';
 
 import CreateTestModal from '../CreateTestModal';
 import EditTestModal from '../EditTestModal';
 
-function TestPage() {
-	const sessionUser = useSelector((state) => state.session.user);
+function UTestPage() {
+	const sessionUser = useSelector((state) => state?.session?.user);
 	const history = useHistory();
+	const { testId } = useParams();
 	const [test, setTest] = useState(null);
 	const [input, setInput] = useState('');
 	const [spaces, setSpaces] = useState(0);
@@ -24,6 +25,7 @@ function TestPage() {
 	const [startTime, setStartTime] = useState(Date.now());
 	const [hasStarted, setHasStarted] = useState(false);
 	const [formatted, setFormatted] = useState([]);
+	const [id, setId] = useState(testId);
 
 	const getClass = (id) => {
 		if (correctIDs.indexOf(id) > -1) {
@@ -71,16 +73,16 @@ function TestPage() {
 
 	useEffect(() => {
 		async function getTest() {
-			const response = await fetch('/api/tests/random');
+			const response = await fetch(`/api/tests/${testId}`);
 			const data = await response.json();
 			setTest(data);
 		}
 		getTest();
-	}, []);
+	}, [testId]);
 
 	useEffect(() => {
 		const calcAverageWord = () => {
-			const correctWords = test?.randomTest?.body
+			const correctWords = test?.test?.body
 				.split(' ')
 				.filter((str, idx) => correctIDs.indexOf(idx) > -1);
 			const correctCharCount = correctWords?.reduce(
@@ -126,7 +128,7 @@ function TestPage() {
 	useEffect(() => {
 		if (input[input.length - 1] === ' ') {
 			const currentWord = document.getElementById(activeId);
-			if (activeId >= test?.randomTest?.body.split(' ').length - 1) {
+			if (activeId >= test?.test?.body.split(' ').length - 1) {
 				// Test is done
 				if (currentWord.innerText === input.trim()) {
 					setCorrectIDs([...correctIDs, activeId]);
@@ -150,20 +152,20 @@ function TestPage() {
 	}, [input]);
 
 	useEffect(() => {
-		if (typeof test?.randomTest?.body === 'string') {
+		if (typeof test?.test?.body === 'string') {
 			const formatted = [];
 			let newInd = 0;
 			let curInd = 0;
 			let lineInd = 0;
-			while (curInd < test?.randomTest?.body.length) {
+			while (curInd < test?.test?.body.length) {
 				if (
-					test?.randomTest?.body[curInd] === ';' ||
-					test?.randomTest?.body[curInd] === '{' ||
-					test?.randomTest?.body[curInd] === '}'
+					test?.test?.body[curInd] === ';' ||
+					test?.test?.body[curInd] === '{' ||
+					test?.test?.body[curInd] === '}'
 				) {
 					formatted.push(
 						<div className={`line ${lineInd}`}>
-							{test?.randomTest?.body
+							{test?.test?.body
 								.slice(newInd, curInd + 1)
 								.split(' ')
 								.map((str) => (
@@ -185,19 +187,17 @@ function TestPage() {
 
 	return (
 		<>
-			{test?.randomTest && (
+			{test?.test && (
 				<div className="test-box">
-					<h2>{test.randomTest.title}</h2>
+					<h2>{test.test.title}</h2>
 					<div className="test-body-container">
 						{/* <div className="word-container">
-							{test.randomTest.body
+							{test.test.body
 								.split(' ')
 								.map((str, i) => convertStr(str, i))}
 						</div> */}
 						<div className="word-container">
-							{test?.randomTest?.body
-								.split(' ')
-								.map((ele, i) => convertStr(ele, i))}
+							{test.test.body.split(' ').map((ele, i) => convertStr(ele, i))}
 						</div>
 					</div>
 					<div className="input-container">
@@ -213,19 +213,19 @@ function TestPage() {
 						<div className="temp-wpm">WPM: {wpm}</div>
 						{/* <div className="temp-accuracy">Accuracy: {accuracy}</div> */}
 						<div className="temp-progress">
-							Progress: {activeId}/{test.randomTest.body.split(' ').length}
+							Progress: {activeId}/{test.test.body.split(' ').length}
 						</div>
 					</div>
-					{sessionUser?.id === test?.randomTest?.userId && (
+					{sessionUser?.id === test?.test?.userId && (
 						<>
 							<button
 								className="delete btn"
-								id={`test-${test.randomTest.id}`}
+								id={`test-${test.test.id}`}
 								onClick={handleDelete}
 							>
 								Delete Test
 							</button>
-							<EditTestModal test={test.randomTest} />
+							<EditTestModal test={test.test} />
 						</>
 					)}
 					<CreateTestModal />
@@ -235,4 +235,4 @@ function TestPage() {
 	);
 }
 
-export default TestPage;
+export default UTestPage;

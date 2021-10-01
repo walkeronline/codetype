@@ -9,6 +9,7 @@ import { Modal } from './context/Modal';
 import SplashPage from './components/SplashPage';
 import TestPage from './components/TestPage';
 import Friends from './components/Friends';
+import UTestPage from './components/UTestPage';
 function App() {
 	const dispatch = useDispatch();
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -37,6 +38,9 @@ function App() {
 					<Route path="/friends"></Route>
 					<Route path="/signup">
 						<SignupFormPage />
+					</Route>
+					<Route path="/test/:testId">
+						<UTestPage />
 					</Route>
 				</Switch>
 			)}

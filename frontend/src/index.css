@@ -85,6 +85,46 @@ body {
 	margin: 5px 10px;
 }
 
+.about {
+	border: none;
+	background: transparent;
+	color: #f2f2f2;
+	border-radius: 15px;
+	padding: 6px 15px;
+	font-size: 16px;
+	margin: 5px 10px;
+}
+
+.about:hover {
+	cursor: pointer;
+}
+
+.about-content {
+	max-width: 40vw;
+	min-width: 30vw;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.about-content a {
+	width: auto;
+	height: auto;
+}
+
+.about-content i {
+	width: 70px;
+	height: 70px;
+}
+
+.social-links {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	margin-top: 20px;
+}
+
 .btn:hover {
 	cursor: pointer;
 }

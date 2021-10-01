@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import SignUpFormModal from '../SignUpFormModal';
+import { useHistory } from 'react-router';
 
 import './SplashPage.css';
 
 function SplashPage() {
 	const [test, setTest] = useState(null);
+	const history = useHistory();
+	const sessionUser = useSelector((state) => state?.session?.user);
 
 	useEffect(() => {
 		async function getTest() {
@@ -16,6 +19,10 @@ function SplashPage() {
 		}
 		getTest();
 	}, []);
+
+	if (sessionUser) {
+		history.push('/test');
+	}
 
 	return (
 		<>

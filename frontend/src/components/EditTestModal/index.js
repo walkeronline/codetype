@@ -12,7 +12,7 @@ function EditTestModal({ test }) {
 			</button>
 			{showModal && (
 				<Modal onClose={() => setShowModal(false)}>
-					<EditTestForm test={test} />
+					<EditTestForm test={test} onClose={() => setShowModal(false)} />
 				</Modal>
 			)}
 		</>

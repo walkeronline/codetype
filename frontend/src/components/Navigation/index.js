@@ -6,6 +6,7 @@ import Friends from '../Friends';
 import LoginFormModal from '../LoginFormModal';
 import './Navigation.css';
 import SignUpFormModal from '../SignUpFormModal';
+import AboutModal from '../AboutModal';
 
 function Navigation({ isLoaded }) {
 	const sessionUser = useSelector((state) => state.session.user);
@@ -14,6 +15,9 @@ function Navigation({ isLoaded }) {
 	if (sessionUser) {
 		sessionLinks = (
 			<>
+				<li>
+					<AboutModal />
+				</li>
 				<li>
 					<NavLink className="sign-up" to="/test">
 						Practice
@@ -27,6 +31,9 @@ function Navigation({ isLoaded }) {
 	} else {
 		sessionLinks = (
 			<>
+				<li>
+					<AboutModal />
+				</li>
 				<li>
 					<SignUpFormModal
 						className="sign-up"

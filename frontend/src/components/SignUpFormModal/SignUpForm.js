@@ -44,7 +44,7 @@ function SignUpForm({ onClose }) {
 		<>
 			<h1>Sign Up</h1>
 			<form className="sign-up-form" onSubmit={handleSubmit}>
-      <ul className="errors-list">
+				<ul className="errors-list">
 					{errors.map((error, idx) => (
 						<li className="error-text" key={idx}>
 							{error}
@@ -90,10 +90,10 @@ function SignUpForm({ onClose }) {
 				<button className="btn" type="submit">
 					Sign Up
 				</button>
-				<button onClick={handleDemo} className="btn">
-					Demo
-				</button>
 			</form>
+			<button onClick={handleDemo} className="btn">
+				Demo
+			</button>
 		</>
 	);
 }

@@ -1,22 +1,22 @@
 import { useState } from 'react';
 import { Modal } from '../../context/Modal';
-import TestForm from './TestForm';
+import AboutModalInfo from './AboutModalInfo';
 
-function CreateTestModal() {
+function AboutModal() {
 	const [showModal, setShowModal] = useState(false);
 
 	return (
 		<>
-			<button className="create-test btn" onClick={() => setShowModal(true)}>
-				Create Test
+			<button className="about" onClick={() => setShowModal(true)}>
+				About
 			</button>
 			{showModal && (
 				<Modal onClose={() => setShowModal(false)}>
-					<TestForm onClose={() => setShowModal(false)} />
+					<AboutModalInfo />
 				</Modal>
 			)}
 		</>
 	);
 }
 
-export default CreateTestModal;
+export default AboutModal;

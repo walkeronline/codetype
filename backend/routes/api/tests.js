@@ -40,6 +40,18 @@ router.get(
 	})
 );
 
+router.get(
+	'/:testId',
+	asyncHandler(async (req, res) => {
+		const { testId } = req.params;
+		const test = await Test.findByPk(+testId);
+
+		return res.json({
+			test,
+		});
+	})
+);
+
 router.post(
 	'/',
 	validateTest,

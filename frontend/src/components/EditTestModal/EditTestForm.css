@@ -1,6 +1,18 @@
 .edit-test-form * {
 	color: #000;
 }
+
+.edit-test-form {
+	display: flex;
+	flex-direction: column;
+	width: 500px;
+}
+
+.edit-test-form label {
+	display: flex;
+	flex-direction: column;
+}
+
 .btn {
 	border: none;
 	background: #2241f2;

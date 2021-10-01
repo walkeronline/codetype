@@ -12,6 +12,7 @@
 .word-container {
 	display: flex;
 	flex-direction: column;
+	overflow: scroll;
 }
 
 .test-body-container {
@@ -68,4 +69,9 @@ div.correct {
 
 div.incorrect {
 	color: red;
+}
+
+.line {
+	display: flex;
+	flex-direction: row;
 }

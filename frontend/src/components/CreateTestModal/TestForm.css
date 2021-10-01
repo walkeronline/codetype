@@ -2,6 +2,23 @@
 	color: #000;
 }
 
+.test-form {
+	display: flex;
+	flex-direction: column;
+	width: 500px;
+}
+
+.test-form label {
+	display: flex;
+	flex-direction: column;
+}
+
+.code-input {
+	height: 300px;
+	max-width: 500px;
+	margin-bottom: 10px;
+}
+
 .btn {
 	border: none;
 	background: #2241f2;
