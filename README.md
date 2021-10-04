@@ -49,5 +49,5 @@ CodeType helps programmers become more efficient by improving typing speeds.
 ## Technical Details 🧑‍💻
 
 ### Code Snippets 💻
-Autoscroll
+#### Test Autoscroll
 ![Autoscroll](https://i.ibb.co/VYT7yvk/Code-D6p-YVURPMZ.png)
