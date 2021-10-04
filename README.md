@@ -6,6 +6,16 @@
 ### About
 CodeType helps programmers become more efficient by improving typing speeds.
 
+## Technologies Used ⚙️
+- JavaScript
+- ReactJS
+- Express
+- HTML
+- CSS
+- Node.js
+- Sequelize
+- PostgreSQL
+
 ### Wiki Links
 - [Home](https://github.com/walkerwilliamsx/my-capstone/wiki)
 - [Feature List](https://github.com/walkerwilliamsx/my-capstone/wiki/Feature-List)
@@ -25,15 +35,6 @@ CodeType helps programmers become more efficient by improving typing speeds.
 4. Run 'npx dotenv sequelize db:migrate' followed by 'npx dotenv sequelize db:seed:all'
 5. Run 'npm start' in both the 'frontend' and 'backend' directories
 
-## Technologies Used ⚙️
-- JavaScript
-- ReactJS
-- Express
-- HTML
-- CSS
-- Node.js
-- Sequelize
-- PostgreSQL
 ## Feature List 🔮
 - Coding Speed Test
   - Create Tests for other users to use
