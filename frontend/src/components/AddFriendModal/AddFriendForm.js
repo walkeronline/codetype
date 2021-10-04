@@ -13,7 +13,6 @@ function AddFriendForm({ onClose, friends, setFriends }) {
 		e.preventDefault();
 
 		const add = async ({ id, username }) => {
-			console.log(1);
 			const response = await csrfFetch('/api/friends', {
 				method: 'POST',
 				body: JSON.stringify({
@@ -44,7 +43,7 @@ function AddFriendForm({ onClose, friends, setFriends }) {
 	return (
 		<div className="add-friend-form modal">
 			<h2>Add a Friend</h2>
-			<form onSubmit={handleSubmit}>
+			<form id="xyz" onSubmit={handleSubmit}>
 				<ul className="errors-list">
 					{errors.map((error, idx) => (
 						<li className="error-text" key={idx}>
@@ -58,6 +57,7 @@ function AddFriendForm({ onClose, friends, setFriends }) {
 						type="text"
 						value={username}
 						onChange={(e) => setUsername(e.target.value)}
+						defaultValue="hi"
 						required
 					/>
 				</label>

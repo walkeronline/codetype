@@ -2,7 +2,7 @@ const express = require('express');
 const asyncHandler = require('express-async-handler');
 const { check } = require('express-validator');
 
-const { Test, sequelize } = require('../../db/models');
+const { Test, User, sequelize } = require('../../db/models');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
@@ -26,6 +26,18 @@ const validateTest = [
 		.withMessage('Please provide a character count.'),
 	handleValidationErrors,
 ];
+
+router.get(
+	'/',
+	asyncHandler(async (req, res) => {
+		const tests = await Test.findAll({
+			include: {
+				model: User,
+			},
+		});
+		return res.json(tests.sort((a, b) => a.id - b.id));
+	})
+);
 
 router.get(
 	'/random',

@@ -7,6 +7,7 @@ import './TestPage.css';
 
 import CreateTestModal from '../CreateTestModal';
 import EditTestModal from '../EditTestModal';
+import { Link } from 'react-router-dom';
 
 function TestPage() {
 	const sessionUser = useSelector((state) => state.session.user);
@@ -34,6 +35,25 @@ function TestPage() {
 			return '';
 		}
 	};
+
+	useEffect(() => {
+		const scroll = () => {
+			const firstIndex =
+				document.querySelector('#word-container').children[0].id;
+
+			for (let i = firstIndex; i < activeId; i++) {
+				const word = document.getElementById(i);
+				word.remove();
+			}
+		};
+
+		const wordOffset = document.getElementById(+activeId)?.offsetTop;
+		const boxOffset = document.getElementById('word-container')?.offsetTop;
+
+		if (wordOffset > boxOffset + 11) {
+			scroll();
+		}
+	}, [activeId, spaces]);
 
 	const convertStr = (str, i) => {
 		if (i === activeId) {
@@ -92,11 +112,7 @@ function TestPage() {
 
 		calcAverageWord();
 		setWPM(((calcAverageWord() + spaces) * (60 / timeSeconds)) / 5);
-	}, [spaces, timeSeconds]);
-
-	// useEffect(() => {
-	// 	setStartTime(Date.now());
-	// }, [hasStarted]);
+	}, [correctIDs, spaces, test?.randomTest?.body, timeSeconds]);
 
 	useEffect(() => {
 		const updateTime = () => {
@@ -110,34 +126,25 @@ function TestPage() {
 			setAccuracy(0);
 			setHasStarted(true);
 			setStartTime(20);
-			console.log(accuracy, hasStarted, startTime, timer);
 		}
 	}, [input, hasStarted, startTime, accuracy, timer]);
-
-	// useEffect(() => {
-	// 	const now = Date.now();
-	// 	if (input.length > 0 && !startTime) {
-	// 		console.log('HIT!');
-	// 		setStartTime(now);
-	// 		console.log(startTime);
-	// 	}
-	// }, [input, startTime]);
 
 	useEffect(() => {
 		if (input[input.length - 1] === ' ') {
 			const currentWord = document.getElementById(activeId);
 			if (activeId >= test?.randomTest?.body.split(' ').length - 1) {
 				// Test is done
-				if (currentWord.innerText === input.trim()) {
+				if (currentWord && currentWord.innerText === input.trim()) {
 					setCorrectIDs([...correctIDs, activeId]);
 				} else {
 					setIncorrectIDs([...incorrectIDs.values(), activeId]);
 				}
 				clearInterval(timer);
+				setInput('');
 				return;
 			}
 
-			if (currentWord.innerText === input.trim()) {
+			if (currentWord && currentWord.innerText === input.trim()) {
 				setCorrectIDs([...correctIDs, activeId]);
 			} else {
 				setIncorrectIDs([...incorrectIDs.values(), activeId]);
@@ -147,41 +154,48 @@ function TestPage() {
 			setActiveId(activeId + 1);
 			return;
 		}
-	}, [input]);
+	}, [
+		activeId,
+		correctIDs,
+		incorrectIDs,
+		input,
+		spaces,
+		test?.randomTest?.body,
+		timer,
+	]);
 
-	useEffect(() => {
-		if (typeof test?.randomTest?.body === 'string') {
-			const formatted = [];
-			let newInd = 0;
-			let curInd = 0;
-			let lineInd = 0;
-			while (curInd < test?.randomTest?.body.length) {
-				if (
-					test?.randomTest?.body[curInd] === ';' ||
-					test?.randomTest?.body[curInd] === '{' ||
-					test?.randomTest?.body[curInd] === '}'
-				) {
-					formatted.push(
-						<div className={`line ${lineInd}`}>
-							{test?.randomTest?.body
-								.slice(newInd, curInd + 1)
-								.split(' ')
-								.map((str) => (
-									<div>{str}</div>
-								))}
-						</div>
-					);
-					newInd = curInd + 1;
-					curInd = newInd;
-					lineInd++;
-					console.log(formatted);
-				} else {
-					curInd++;
-				}
-			}
-			setFormatted(formatted);
-		}
-	}, [test]);
+	// useEffect(() => {
+	// 	if (typeof test?.randomTest?.body === 'string') {
+	// 		const formatted = [];
+	// 		let newInd = 0;
+	// 		let curInd = 0;
+	// 		let lineInd = 0;
+	// 		while (curInd < test?.randomTest?.body.length) {
+	// 			if (
+	// 				test?.randomTest?.body[curInd] === ';' ||
+	// 				test?.randomTest?.body[curInd] === '{' ||
+	// 				test?.randomTest?.body[curInd] === '}'
+	// 			) {
+	// 				formatted.push(
+	// 					<div className={`line ${lineInd}`}>
+	// 						{test?.randomTest?.body
+	// 							.slice(newInd, curInd + 1)
+	// 							.split(' ')
+	// 							.map((str) => (
+	// 								<div>{str}</div>
+	// 							))}
+	// 					</div>
+	// 				);
+	// 				newInd = curInd + 1;
+	// 				curInd = newInd;
+	// 				lineInd++;
+	// 			} else {
+	// 				curInd++;
+	// 			}
+	// 		}
+	// 		setFormatted(formatted);
+	// 	}
+	// }, [test]);
 
 	return (
 		<>
@@ -194,7 +208,7 @@ function TestPage() {
 								.split(' ')
 								.map((str, i) => convertStr(str, i))}
 						</div> */}
-						<div className="word-container">
+						<div className="word-container" id="word-container">
 							{test?.randomTest?.body
 								.split(' ')
 								.map((ele, i) => convertStr(ele, i))}
@@ -209,26 +223,28 @@ function TestPage() {
 							type="text"
 							placeholder={!activeId ? 'Type here' : ''}
 						></input>
-						<div className="temp-seconds">Time: {timeSeconds}</div>
-						<div className="temp-wpm">WPM: {wpm}</div>
 						{/* <div className="temp-accuracy">Accuracy: {accuracy}</div> */}
-						<div className="temp-progress">
-							Progress: {activeId}/{test.randomTest.body.split(' ').length}
-						</div>
 					</div>
-					{sessionUser?.id === test?.randomTest?.userId && (
-						<>
-							<button
-								className="delete btn"
-								id={`test-${test.randomTest.id}`}
-								onClick={handleDelete}
-							>
-								Delete Test
-							</button>
-							<EditTestModal test={test.randomTest} />
-						</>
-					)}
-					<CreateTestModal />
+					<Link to="/all-tests">View All Tests</Link>
+					<div className="test-stats">
+						<div className="temp-seconds">{Math.round(timeSeconds)}</div>
+						<div className="temp-wpm">{Math.round(wpm)}</div>
+					</div>
+					<div className="manage-tests-container">
+						<CreateTestModal />
+						{sessionUser?.id === test?.randomTest?.userId && (
+							<>
+								<EditTestModal test={test.randomTest} />
+								<button
+									className="delete btn red"
+									id={`test-${test?.randomTest?.id}`}
+									onClick={handleDelete}
+								>
+									Delete Test
+								</button>
+							</>
+						)}
+					</div>
 				</div>
 			)}
 		</>

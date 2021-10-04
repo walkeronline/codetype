@@ -11,8 +11,12 @@
 
 .word-container {
 	display: flex;
-	flex-direction: column;
-	overflow: scroll;
+	flex-direction: row;
+	line-height: 33px;
+	width: 800px;
+	height: 300px;
+	flex-wrap: wrap;
+	overflow: hidden;
 }
 
 .test-body-container {
@@ -68,6 +72,28 @@ div.correct {
 }
 
 div.incorrect {
+	color: red;
+}
+
+span.active {
+	color: #2241f2;
+	margin: 10px 5px;
+	font-size: 24px;
+	height: 40px;
+}
+
+span.inactive {
+	color: #595959;
+	margin: 10px 5px;
+	font-size: 24px;
+	height: 40px;
+}
+
+span.correct {
+	color: green;
+}
+
+span.incorrect {
 	color: red;
 }
 

@@ -77,9 +77,22 @@ module.exports = (sequelize, DataTypes) => {
 					len: [3, 256],
 				},
 			},
+			location: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			},
 			displayName: {
 				type: DataTypes.STRING,
 				allowNull: false,
+			},
+			imageUrl: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			},
+			online: {
+				type: DataTypes.BOOLEAN,
+				allowNull: false,
+				defaultValue: false,
 			},
 			hashedPassword: {
 				type: DataTypes.STRING.BINARY,
@@ -94,7 +107,7 @@ module.exports = (sequelize, DataTypes) => {
 			modelName: 'User',
 			defaultScope: {
 				attributes: {
-					exclude: ['hashedPassword', 'email', 'createdAt', 'updatedAt'],
+					exclude: ['hashedPassword'],
 				},
 			},
 			scopes: {

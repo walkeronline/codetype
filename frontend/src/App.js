@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import SignupFormPage from './components/SignupFormPage';
 // import LoginFormPage from "./components/LoginFormPage";
@@ -10,13 +10,25 @@ import SplashPage from './components/SplashPage';
 import TestPage from './components/TestPage';
 import Friends from './components/Friends';
 import UTestPage from './components/UTestPage';
+import AllTestPage from './components/AllTestPage';
+import NotFound from './components/NotFound';
+import UserProfilePage from './components/UserProfilePage';
+
 function App() {
 	const dispatch = useDispatch();
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [showModal, setShowModal] = useState(false);
+	const sessionUser = useSelector((state) => state.session.user);
 	useEffect(() => {
 		dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
 	}, [dispatch]);
+
+	const checkUser = () => {
+		if (sessionUser) {
+			return <TestPage />;
+		}
+		return <SplashPage />;
+	};
 
 	return (
 		<>
@@ -30,17 +42,26 @@ function App() {
 			{isLoaded && (
 				<Switch>
 					<Route exact path="/">
-						<SplashPage />
+						{checkUser()}
 					</Route>
-					<Route exact path="/test">
-						<TestPage />
-					</Route>
-					<Route path="/friends"></Route>
-					<Route path="/signup">
-						<SignupFormPage />
-					</Route>
-					<Route path="/test/:testId">
-						<UTestPage />
+					{sessionUser && (
+						<>
+							<Route exact path="/test">
+								<TestPage />
+							</Route>
+							<Route path="/all-tests">
+								<AllTestPage />
+							</Route>
+							<Route exact path="/test/:testId">
+								<UTestPage />
+							</Route>
+							<Route exact path="/users/:userId">
+								<UserProfilePage />
+							</Route>
+						</>
+					)}
+					<Route>
+						<NotFound />
 					</Route>
 				</Switch>
 			)}

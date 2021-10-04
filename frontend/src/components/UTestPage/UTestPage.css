@@ -1,0 +1,16 @@
+.test-stats {
+	display: flex;
+	justify-content: space-between;
+	width: 800px;
+	font-size: 24px;
+	font-weight: 600;
+	color: #2241f2;
+}
+
+.test-stats > div {
+	color: #2241f2;
+}
+
+.test-box a {
+	text-decoration: none;
+}

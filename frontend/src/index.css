@@ -11,8 +11,8 @@
 
 .profile-dropdown {
 	position: absolute;
-	top: 75%;
-	right: 0;
+	top: 5em;
+	right: 4em;
 	list-style-type: none;
 }
 
@@ -159,7 +159,22 @@ body {
 }
 
 .hero-logo {
-	animation: slide-d 2s;
+	/* animation: slide-d 2s; */
+}
+
+.profile-dropdown > li {
+	background: #262626;
+	border: 1px solid white;
+	border-radius: 0.5em;
+	padding: 4px 8px;
+	margin-bottom: 2px;
+	text-decoration: none;
+	font-size: 1em;
+}
+
+.profile-dropdown > li > a {
+	text-decoration: none;
+	font-size: 1em;
 }
 
 @keyframes slide-d {

@@ -7,22 +7,16 @@ import './SplashPage.css';
 
 function SplashPage() {
 	const [test, setTest] = useState(null);
-	const history = useHistory();
 	const sessionUser = useSelector((state) => state?.session?.user);
 
 	useEffect(() => {
 		async function getTest() {
 			const response = await fetch('/api/tests/random');
 			const data = await response.json();
-			console.log(data);
 			setTest(data);
 		}
 		getTest();
 	}, []);
-
-	if (sessionUser) {
-		history.push('/test');
-	}
 
 	return (
 		<>

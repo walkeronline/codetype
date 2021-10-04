@@ -55,7 +55,6 @@ function TestForm({ onClose }) {
 		});
 
 		if (data.errors) {
-			console.log(data.errors);
 			setErrors(data.errors);
 		}
 

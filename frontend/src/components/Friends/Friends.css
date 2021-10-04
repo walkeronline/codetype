@@ -33,7 +33,7 @@
 .friends-container {
 	position: absolute;
 	z-index: 1000;
-	right: 10px;
+	right: 0;
 	bottom: 0;
 	width: 300px;
 	background: #262626;
@@ -115,7 +115,7 @@
 }
 
 .start {
-	transform: translateY(57vh);
+	transform: translateY(34em);
 }
 
 @keyframes slide-up {

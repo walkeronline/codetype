@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { csrfFetch } from '../../store/csrf';
 import { Redirect, useHistory, useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import './UTestPage.css';
 
@@ -40,18 +41,43 @@ function UTestPage() {
 	const convertStr = (str, i) => {
 		if (i === activeId) {
 			return (
-				<div key={i} id={i} className={`active ${getClass(i)}`}>
+				<span key={i} id={i} className={`active ${getClass(i)}`}>
 					{str}
-				</div>
+				</span>
 			);
 		} else {
 			return (
-				<div key={i} id={i} className={`inactive ${getClass(i)}`}>
+				<span key={i} id={i} className={`inactive ${getClass(i)}`}>
 					{str}
-				</div>
+				</span>
 			);
 		}
 	};
+
+	useEffect(() => {
+		const scroll = () => {
+			const firstIndex =
+				document.querySelector('#word-container').children[0].id;
+
+			// console.log(firstIndex);
+
+			for (let i = firstIndex; i < activeId; i++) {
+				const word = document.getElementById(i);
+				// console.log(word);
+				word.remove();
+			}
+		};
+
+		const wordOffset = document.getElementById(+activeId)?.offsetTop;
+		const boxOffset = document.getElementById('word-container')?.offsetTop;
+
+		// console.log(wordOffset, boxOffset);
+
+		if (wordOffset > boxOffset + 11) {
+			// console.log('scrolling');
+			scroll();
+		}
+	}, [activeId, spaces]);
 
 	const handleDelete = (e) => {
 		e.preventDefault();
@@ -94,7 +120,7 @@ function UTestPage() {
 
 		calcAverageWord();
 		setWPM(((calcAverageWord() + spaces) * (60 / timeSeconds)) / 5);
-	}, [spaces, timeSeconds]);
+	}, [correctIDs, spaces, test?.test?.body, timeSeconds]);
 
 	// useEffect(() => {
 	// 	setStartTime(Date.now());
@@ -112,34 +138,26 @@ function UTestPage() {
 			setAccuracy(0);
 			setHasStarted(true);
 			setStartTime(20);
-			console.log(accuracy, hasStarted, startTime, timer);
 		}
 	}, [input, hasStarted, startTime, accuracy, timer]);
-
-	// useEffect(() => {
-	// 	const now = Date.now();
-	// 	if (input.length > 0 && !startTime) {
-	// 		console.log('HIT!');
-	// 		setStartTime(now);
-	// 		console.log(startTime);
-	// 	}
-	// }, [input, startTime]);
 
 	useEffect(() => {
 		if (input[input.length - 1] === ' ') {
 			const currentWord = document.getElementById(activeId);
 			if (activeId >= test?.test?.body.split(' ').length - 1) {
 				// Test is done
-				if (currentWord.innerText === input.trim()) {
+				if (currentWord && currentWord.innerText === input.trim()) {
 					setCorrectIDs([...correctIDs, activeId]);
 				} else {
 					setIncorrectIDs([...incorrectIDs.values(), activeId]);
 				}
 				clearInterval(timer);
+				setInput('');
+				// setSpaces(spaces + 1);
 				return;
 			}
 
-			if (currentWord.innerText === input.trim()) {
+			if (currentWord && currentWord.innerText === input.trim()) {
 				setCorrectIDs([...correctIDs, activeId]);
 			} else {
 				setIncorrectIDs([...incorrectIDs.values(), activeId]);
@@ -149,41 +167,48 @@ function UTestPage() {
 			setActiveId(activeId + 1);
 			return;
 		}
-	}, [input]);
+	}, [
+		activeId,
+		correctIDs,
+		incorrectIDs,
+		input,
+		spaces,
+		test?.test?.body,
+		timer,
+	]);
 
-	useEffect(() => {
-		if (typeof test?.test?.body === 'string') {
-			const formatted = [];
-			let newInd = 0;
-			let curInd = 0;
-			let lineInd = 0;
-			while (curInd < test?.test?.body.length) {
-				if (
-					test?.test?.body[curInd] === ';' ||
-					test?.test?.body[curInd] === '{' ||
-					test?.test?.body[curInd] === '}'
-				) {
-					formatted.push(
-						<div className={`line ${lineInd}`}>
-							{test?.test?.body
-								.slice(newInd, curInd + 1)
-								.split(' ')
-								.map((str) => (
-									<div>{str}</div>
-								))}
-						</div>
-					);
-					newInd = curInd + 1;
-					curInd = newInd;
-					lineInd++;
-					console.log(formatted);
-				} else {
-					curInd++;
-				}
-			}
-			setFormatted(formatted);
-		}
-	}, [test]);
+	// useEffect(() => {
+	// 	if (typeof test?.test?.body === 'string') {
+	// 		const formatted = [];
+	// 		let newInd = 0;
+	// 		let curInd = 0;
+	// 		let lineInd = 0;
+	// 		while (curInd < test?.test?.body.length) {
+	// 			if (
+	// 				test?.test?.body[curInd] === ';' ||
+	// 				test?.test?.body[curInd] === '{' ||
+	// 				test?.test?.body[curInd] === '}'
+	// 			) {
+	// 				formatted.push(
+	// 					<div className={`line ${lineInd}`}>
+	// 						{test?.test?.body
+	// 							.slice(newInd, curInd + 1)
+	// 							.split(' ')
+	// 							.map((str) => (
+	// 								<div>{str}</div>
+	// 							))}
+	// 					</div>
+	// 				);
+	// 				newInd = curInd + 1;
+	// 				curInd = newInd;
+	// 				lineInd++;
+	// 			} else {
+	// 				curInd++;
+	// 			}
+	// 		}
+	// 		setFormatted(formatted);
+	// 	}
+	// }, [test]);
 
 	return (
 		<>
@@ -196,8 +221,8 @@ function UTestPage() {
 								.split(' ')
 								.map((str, i) => convertStr(str, i))}
 						</div> */}
-						<div className="word-container">
-							{test.test.body.split(' ').map((ele, i) => convertStr(ele, i))}
+						<div className="word-container" id="word-container">
+							{test?.test?.body.split(' ').map((ele, i) => convertStr(ele, i))}
 						</div>
 					</div>
 					<div className="input-container">
@@ -209,26 +234,28 @@ function UTestPage() {
 							type="text"
 							placeholder={!activeId ? 'Type here' : ''}
 						></input>
-						<div className="temp-seconds">Time: {timeSeconds}</div>
-						<div className="temp-wpm">WPM: {wpm}</div>
 						{/* <div className="temp-accuracy">Accuracy: {accuracy}</div> */}
-						<div className="temp-progress">
-							Progress: {activeId}/{test.test.body.split(' ').length}
-						</div>
 					</div>
-					{sessionUser?.id === test?.test?.userId && (
-						<>
-							<button
-								className="delete btn"
-								id={`test-${test.test.id}`}
-								onClick={handleDelete}
-							>
-								Delete Test
-							</button>
-							<EditTestModal test={test.test} />
-						</>
-					)}
-					<CreateTestModal />
+					<Link to="/all-tests">View All Tests</Link>
+					<div className="test-stats">
+						<div className="temp-seconds">{Math.round(timeSeconds)}</div>
+						<div className="temp-wpm">{Math.round(wpm)}</div>
+					</div>
+					<div className="manage-tests-container">
+						<CreateTestModal />
+						{sessionUser?.id === test?.test?.userId && (
+							<>
+								<EditTestModal test={test.test} />
+								<button
+									className="delete btn red"
+									id={`test-${test.test.id}`}
+									onClick={handleDelete}
+								>
+									Delete Test
+								</button>
+							</>
+						)}
+					</div>
 				</div>
 			)}
 		</>

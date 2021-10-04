@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
 	Test.init(
 		{
 			title: DataTypes.STRING,
-			body: DataTypes.STRING,
+			body: DataTypes.STRING(1000),
 			userId: DataTypes.INTEGER,
 			language: DataTypes.STRING,
 			charCount: DataTypes.INTEGER,
