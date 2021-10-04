@@ -14,11 +14,16 @@ import AllTestPage from './components/AllTestPage';
 import NotFound from './components/NotFound';
 import UserProfilePage from './components/UserProfilePage';
 
+import { useHistory } from 'react-router';
+
 function App() {
 	const dispatch = useDispatch();
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const sessionUser = useSelector((state) => state.session.user);
+
+	const history = useHistory();
+
 	useEffect(() => {
 		dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
 	}, [dispatch]);

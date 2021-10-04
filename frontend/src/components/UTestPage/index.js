@@ -59,11 +59,8 @@ function UTestPage() {
 			const firstIndex =
 				document.querySelector('#word-container').children[0].id;
 
-			// console.log(firstIndex);
-
 			for (let i = firstIndex; i < activeId; i++) {
 				const word = document.getElementById(i);
-				// console.log(word);
 				word.remove();
 			}
 		};
@@ -71,12 +68,7 @@ function UTestPage() {
 		const wordOffset = document.getElementById(+activeId)?.offsetTop;
 		const boxOffset = document.getElementById('word-container')?.offsetTop;
 
-		// console.log(wordOffset, boxOffset);
-
-		if (wordOffset > boxOffset + 11) {
-			// console.log('scrolling');
-			scroll();
-		}
+		if (wordOffset > boxOffset + 11) scroll();
 	}, [activeId, spaces]);
 
 	const handleDelete = (e) => {
@@ -145,7 +137,6 @@ function UTestPage() {
 		if (input[input.length - 1] === ' ') {
 			const currentWord = document.getElementById(activeId);
 			if (activeId >= test?.test?.body.split(' ').length - 1) {
-				// Test is done
 				if (currentWord && currentWord.innerText === input.trim()) {
 					setCorrectIDs([...correctIDs, activeId]);
 				} else {
@@ -153,7 +144,6 @@ function UTestPage() {
 				}
 				clearInterval(timer);
 				setInput('');
-				// setSpaces(spaces + 1);
 				return;
 			}
 

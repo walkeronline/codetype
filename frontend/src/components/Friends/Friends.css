@@ -115,7 +115,7 @@
 }
 
 .start {
-	transform: translateY(34em);
+	/* transform: translateY(34em); */
 }
 
 @keyframes slide-up {

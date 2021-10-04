@@ -11,7 +11,7 @@ function Friends() {
 	const sessionUser = useSelector((state) => state.session.user);
 
 	const [friends, setFriends] = useState(null);
-	const [showMenu, setShowMenu] = useState(false);
+	const [showMenu, setShowMenu] = useState(true);
 
 	const checkProfile = (friend) => {
 		return friend?.friend?.imageUrl
@@ -67,7 +67,7 @@ function Friends() {
 	}, [sessionUser]);
 
 	return (
-		<div className="friends-container start">
+		<div className="friends-container opened">
 			<div className="menu-expand" onClick={toggleMenu}>
 				{getIcon()}
 			</div>
