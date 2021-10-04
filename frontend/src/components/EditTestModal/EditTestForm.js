@@ -5,7 +5,7 @@ import { Redirect, useHistory } from 'react-router';
 
 import './EditTestForm.css';
 
-function EditTestForm({ test, onClose }) {
+function EditTestForm({ test, onClose, convertStr }) {
 	const sessionUser = useSelector((state) => state.session.user);
 	const history = useHistory();
 	const id = test?.id;
@@ -38,6 +38,7 @@ function EditTestForm({ test, onClose }) {
 			const data = await response.json();
 			if (data?.errors) return setErrors(data.errors);
 			onClose();
+			window.location.reload();
 			return history.push(`/test/${data.id}`);
 		};
 

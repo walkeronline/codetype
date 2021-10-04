@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal } from '../../context/Modal';
 import EditTestForm from './EditTestForm';
 
-function EditTestModal({ test }) {
+function EditTestModal({ test, convertStr }) {
 	const [showModal, setShowModal] = useState(false);
 
 	return (
@@ -12,7 +12,11 @@ function EditTestModal({ test }) {
 			</button>
 			{showModal && (
 				<Modal onClose={() => setShowModal(false)}>
-					<EditTestForm test={test} onClose={() => setShowModal(false)} />
+					<EditTestForm
+						test={test}
+						convertStr={convertStr}
+						onClose={() => setShowModal(false)}
+					/>
 				</Modal>
 			)}
 		</>

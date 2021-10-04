@@ -235,7 +235,7 @@ function UTestPage() {
 						<CreateTestModal />
 						{sessionUser?.id === test?.test?.userId && (
 							<>
-								<EditTestModal test={test.test} />
+								<EditTestModal convertStr={convertStr} test={test.test} />
 								<button
 									className="delete btn red"
 									id={`test-${test.test.id}`}
