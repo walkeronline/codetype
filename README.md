@@ -46,9 +46,3 @@ CodeType helps programmers become more efficient by improving typing speeds.
   - Add friends to easily access their profile / tests
   - View friends in pop-up menu
   - Delete friends
-
-## Technical Details 🧑‍💻
-
-### Code Snippets 💻
-#### Test Autoscroll
-![Autoscroll](https://i.ibb.co/VYT7yvk/Code-D6p-YVURPMZ.png)
