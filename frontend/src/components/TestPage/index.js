@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { csrfFetch } from '../../store/csrf';
 import { Redirect, useHistory } from 'react-router';
+import { getTest } from '../../store/test';
+import { useDispatch } from 'react-redux';
 
 import './TestPage.css';
 
@@ -11,16 +13,17 @@ import { Link } from 'react-router-dom';
 
 function TestPage() {
 	const sessionUser = useSelector((state) => state.session.user);
+	const dispatch = useDispatch();
 	const history = useHistory();
-	const [test, setTest] = useState(null);
+	const test = useSelector((state) => state.test.test);
 	const [input, setInput] = useState('');
 	const [spaces, setSpaces] = useState(0);
 	const [activeId, setActiveId] = useState(0);
 	const [correctIDs, setCorrectIDs] = useState([]);
 	const [incorrectIDs, setIncorrectIDs] = useState([]);
 	const [timeSeconds, setTimeSeconds] = useState(null);
-	const [wpm, setWPM] = useState(null);
-	const [accuracy, setAccuracy] = useState(null);
+	const [wpm, setWPM] = useState(0);
+	const [accuracy, setAccuracy] = useState(0);
 	const [timer, setTimer] = useState(0);
 	const [startTime, setStartTime] = useState(Date.now());
 	const [hasStarted, setHasStarted] = useState(false);
@@ -90,17 +93,21 @@ function TestPage() {
 	};
 
 	useEffect(() => {
-		async function getTest() {
-			const response = await fetch('/api/tests/random');
-			const data = await response.json();
-			setTest(data);
-		}
-		getTest();
-	}, []);
+		// async function getTest() {
+		// 	const response = await fetch('/api/tests/random');
+		// 	const data = await response.json();
+		// 	setTest(data);
+		// }
+		// getTest();
+		(async () => {
+			const randomTest = await dispatch(getTest());
+			// setTest(randomTest);
+		})();
+	}, [dispatch]);
 
 	useEffect(() => {
 		const calcAverageWord = () => {
-			const correctWords = test?.randomTest?.body
+			const correctWords = test?.body
 				.split(' ')
 				.filter((str, idx) => correctIDs.indexOf(idx) > -1);
 			const correctCharCount = correctWords?.reduce(
@@ -110,9 +117,10 @@ function TestPage() {
 			return correctCharCount;
 		};
 
-		calcAverageWord();
-		setWPM(((calcAverageWord() + spaces) * (60 / timeSeconds)) / 5);
-	}, [correctIDs, spaces, test?.randomTest?.body, timeSeconds]);
+		if (hasStarted) {
+			setWPM(((calcAverageWord() + spaces) * (60 / timeSeconds)) / 5);
+		}
+	}, [correctIDs, spaces, test?.body, timeSeconds]);
 
 	useEffect(() => {
 		const updateTime = () => {
@@ -132,7 +140,7 @@ function TestPage() {
 	useEffect(() => {
 		if (input[input.length - 1] === ' ') {
 			const currentWord = document.getElementById(activeId);
-			if (activeId >= test?.randomTest?.body.split(' ').length - 1) {
+			if (activeId >= test?.body.split(' ').length - 1) {
 				// Test is done
 				if (currentWord && currentWord.innerText === input.trim()) {
 					setCorrectIDs([...correctIDs, activeId]);
@@ -154,15 +162,7 @@ function TestPage() {
 			setActiveId(activeId + 1);
 			return;
 		}
-	}, [
-		activeId,
-		correctIDs,
-		incorrectIDs,
-		input,
-		spaces,
-		test?.randomTest?.body,
-		timer,
-	]);
+	}, [activeId, correctIDs, incorrectIDs, input, spaces, test?.body, timer]);
 
 	// useEffect(() => {
 	// 	if (typeof test?.randomTest?.body === 'string') {
@@ -199,19 +199,17 @@ function TestPage() {
 
 	return (
 		<>
-			{test?.randomTest && (
+			{test && (
 				<div className="test-box">
-					<h2>{test.randomTest.title}</h2>
+					<h2>{test?.title}</h2>
 					<div className="test-body-container">
 						{/* <div className="word-container">
-							{test.randomTest.body
+							{test..body
 								.split(' ')
 								.map((str, i) => convertStr(str, i))}
 						</div> */}
 						<div className="word-container" id="word-container">
-							{test?.randomTest?.body
-								.split(' ')
-								.map((ele, i) => convertStr(ele, i))}
+							{test?.body.split(' ').map((ele, i) => convertStr(ele, i))}
 						</div>
 					</div>
 					<div className="input-container">
@@ -225,19 +223,21 @@ function TestPage() {
 						></input>
 						{/* <div className="temp-accuracy">Accuracy: {accuracy}</div> */}
 					</div>
+					{hasStarted && (
+						<div className="test-stats">
+							<div className="temp-seconds">{Math.round(timeSeconds)} sec</div>
+							<div className="temp-wpm">{Math.round(wpm)} WPM</div>
+						</div>
+					)}
 					<Link to="/all-tests">View All Tests</Link>
-					<div className="test-stats">
-						<div className="temp-seconds">{Math.round(timeSeconds)}</div>
-						<div className="temp-wpm">{Math.round(wpm)}</div>
-					</div>
 					<div className="manage-tests-container">
 						<CreateTestModal />
-						{sessionUser?.id === test?.randomTest?.userId && (
+						{sessionUser?.id === test?.userId && (
 							<>
-								<EditTestModal test={test.randomTest} />
+								<EditTestModal test={test} />
 								<button
 									className="delete btn red"
-									id={`test-${test?.randomTest?.id}`}
+									id={`test-${test?.id}`}
 									onClick={handleDelete}
 								>
 									Delete Test
