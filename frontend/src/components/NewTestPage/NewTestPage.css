@@ -1,0 +1,120 @@
+.test-box {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	top: 25%;
+	left: 0;
+	width: 100vw;
+}
+
+.word-container {
+	display: flex;
+	flex-direction: row;
+	line-height: 33px;
+	width: 800px;
+	height: 300px;
+	flex-wrap: wrap;
+	overflow: hidden;
+}
+
+.test-body-container {
+	background: white;
+	height: 33vh;
+	width: 800px;
+	overflow: initial;
+	white-space: initial;
+	color: #595959;
+	border-radius: 20px;
+	display: flex;
+	flex-direction: row;
+}
+
+.user-input {
+	width: 800px;
+	border-radius: 10px;
+	border: none;
+	height: 60px;
+	background: #2241f2;
+	text-align: center;
+	font-size: 24px;
+	position: relative;
+	bottom: 60px;
+	color: #fff;
+}
+
+.user-input::placeholder {
+	color: #fff;
+}
+
+.user-input:focus {
+	border: none;
+	outline: none;
+}
+
+div.active {
+	color: #2241f2;
+	margin: 10px 5px;
+	font-size: 24px;
+	height: 40px;
+}
+
+div.inactive {
+	color: #595959;
+	margin: 10px 5px;
+	font-size: 24px;
+	height: 40px;
+}
+
+div.correct {
+	color: green;
+}
+
+div.incorrect {
+	color: red;
+}
+
+span.active {
+	color: #2241f2;
+	margin: 10px 5px;
+	font-size: 24px;
+	height: 40px;
+}
+
+span.inactive {
+	color: #595959;
+	margin: 10px 5px;
+	font-size: 24px;
+	height: 40px;
+}
+
+span.correct {
+	color: green;
+}
+
+span.incorrect {
+	color: red;
+}
+
+.line {
+	display: flex;
+	flex-direction: row;
+}
+
+.test-stats {
+	display: flex;
+	justify-content: space-between;
+	width: 800px;
+	font-size: 24px;
+	font-weight: 600;
+	color: #2241f2;
+}
+
+.test-stats > div {
+	color: #2241f2;
+}
+
+.test-box a {
+	text-decoration: none;
+}

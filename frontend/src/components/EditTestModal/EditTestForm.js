@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { csrfFetch } from '../../store/csrf';
 import { Redirect, useHistory } from 'react-router';
+import { editTest } from '../../store/test';
 
 import './EditTestForm.css';
 
 function EditTestForm({ test, onClose, convertStr }) {
 	const sessionUser = useSelector((state) => state.session.user);
+	const dispatch = useDispatch();
 	const history = useHistory();
 	const id = test?.id;
 	const [title, setTitle] = useState(test.title);
@@ -20,37 +22,45 @@ function EditTestForm({ test, onClose, convertStr }) {
 		setCharCount(body.length);
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setErrors([]);
 
-		const edit = async ({ id, title, body, language, charCount }) => {
-			const response = await csrfFetch('/api/tests', {
-				method: 'PUT',
-				body: JSON.stringify({
-					id,
-					title,
-					body,
-					language,
-					charCount,
-				}),
-			});
-			const data = await response.json();
-			if (data?.errors) return setErrors(data.errors);
-			onClose();
-			window.location.reload();
-			return history.push(`/test/${data.id}`);
-		};
+		// const edit = async ({ id, title, body, language, charCount }) => {
+		// const response = await csrfFetch('/api/tests', {
+		// 	method: 'PUT',
+		// 	body: JSON.stringify({
+		// 		id,
+		// 		title,
+		// 		body,
+		// 		language,
+		// 		charCount,
+		// 	}),
+		// });
+		// const data = await response.json();
+		// if (data?.errors) return setErrors(data.errors);
+		// onClose();
+		// console.log(window.location.href);
+		// // if (
+		// // 	window.location.href.split('/')[
+		// // 		window.location.href.split('/').length - 1
+		// // 	]
+		// // )
+		// window.location.reload();
+		// return history.push(`/test/${data.id}`);
+		// };
 
-		const data = edit({
-			id,
-			title,
-			body,
-			language,
-			charCount,
-		});
+		// const data = edit({
+		// 	id,
+		// 	title,
+		// 	body,
+		// 	language,
+		// 	charCount,
+		// });
+		await dispatch(editTest({ id, title, body, language, charCount }));
+		onClose();
 
-		return data;
+		// return data;
 	};
 
 	return (

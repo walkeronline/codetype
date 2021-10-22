@@ -15,6 +15,7 @@ import NotFound from './components/NotFound';
 import UserProfilePage from './components/UserProfilePage';
 
 import { useHistory } from 'react-router';
+import NewTestPage from './components/NewTestPage';
 
 function App() {
 	const dispatch = useDispatch();
@@ -52,13 +53,13 @@ function App() {
 					{sessionUser && (
 						<>
 							<Route exact path="/test">
-								<TestPage />
+								<NewTestPage />
 							</Route>
 							<Route path="/all-tests">
 								<AllTestPage />
 							</Route>
 							<Route exact path="/test/:testId">
-								<UTestPage />
+								<NewTestPage />
 							</Route>
 							<Route exact path="/users/:userId">
 								<UserProfilePage />
