@@ -1,20 +1,34 @@
 #!/usr/bin/env node
-
+const { createServer } = require('http');
+const { Server } = require('socket.io');
 const { port } = require('../config');
 
 const app = require('../app');
 const db = require('../db/models');
 
+// Socket
+const httpServer = createServer(app);
+const io = new Server(httpServer, { cors: { origin: '*' } });
+
 // Check the database connection before starting the app
 db.sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Database connection success! Sequelize is ready to use...');
+	.authenticate()
+	.then(() => {
+		console.log('Database connection success! Sequelize is ready to use...');
 
-    // Start listening for connections
-    app.listen(port, () => console.log(`Listening on port ${port}...`));
-  })
-  .catch((err) => {
-    console.log('Database connection failure.');
-    console.error(err);
-  });
+		io.on('connection', (socket) => {
+			console.log('User connected');
+
+			socket.on('msg', (arg) => {
+				io.emit('incoming', arg);
+			});
+		});
+
+		// Start listening for connections
+		app.listen(port, () => console.log(`Listening on port ${port}...`));
+		io.listen(8000);
+	})
+	.catch((err) => {
+		console.log('Database connection failure.');
+		console.error(err);
+	});

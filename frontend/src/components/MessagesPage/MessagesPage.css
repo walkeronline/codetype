@@ -1,0 +1,9 @@
+.messages-container {
+	position: absolute;
+	top: 25%;
+	left: 45%;
+}
+
+.messages-container > form > input {
+	color: #000;
+}

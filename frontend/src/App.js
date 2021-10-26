@@ -16,6 +16,7 @@ import UserProfilePage from './components/UserProfilePage';
 
 import { useHistory } from 'react-router';
 import NewTestPage from './components/NewTestPage';
+import MessagesPage from './components/MessagesPage';
 
 function App() {
 	const dispatch = useDispatch();
@@ -63,6 +64,9 @@ function App() {
 							</Route>
 							<Route exact path="/users/:userId">
 								<UserProfilePage />
+							</Route>
+							<Route exact path="/messages">
+								<MessagesPage />
 							</Route>
 						</>
 					)}
