@@ -11,7 +11,7 @@ function Friends() {
 	const sessionUser = useSelector((state) => state.session.user);
 
 	const [friends, setFriends] = useState(null);
-	const [showMenu, setShowMenu] = useState(true);
+	const [showMenu, setShowMenu] = useState(false);
 
 	const checkProfile = (friend) => {
 		return friend?.friend?.imageUrl
@@ -44,7 +44,7 @@ function Friends() {
 	};
 
 	const changeVis = (id, type) => {
-		const removeButton = document.querySelector(`#f-${id}`);
+		const removeButton = document.querySelector(`#b-${id}`);
 		if (removeButton) {
 			removeButton.style.visibility = type === 0 ? 'visible' : 'hidden';
 		}
@@ -66,8 +66,16 @@ function Friends() {
 		getFriends();
 	}, [sessionUser]);
 
+	function getId(friend) {
+		if (+friend.friendId === +sessionUser.id) {
+			return friend.userId;
+		}
+		return friend.friendId;
+	}
+	console.log(friends);
+
 	return (
-		<div className="friends-container opened">
+		<div className="friends-container start">
 			<div className="menu-expand" onClick={toggleMenu}>
 				{getIcon()}
 			</div>
@@ -77,18 +85,15 @@ function Friends() {
 			</div>
 			<div className="friends-list">
 				{friends &&
-					friends.map((friend) => (
+					friends.map((friend, idx) => (
 						<div
 							className="custom-spacing"
-							onMouseEnter={(e) => changeVis(friend?.friend?.id, 0)}
-							onMouseLeave={(e) => changeVis(friend?.friend?.id, 1)}
-							key={friend.id}
+							onMouseEnter={(e) => changeVis(getId(friend), 0)}
+							onMouseLeave={(e) => changeVis(getId(friend), 1)}
+							key={friend.friendId}
 						>
 							<div className="friend-info">
-								<Link
-									className="friend-name"
-									to={`/users/${friend?.friend?.id}`}
-								>
+								<Link className="friend-name" to={`/users/${getId(friend)}`}>
 									<img
 										className="friend-image"
 										src={checkProfile(friend)}
@@ -97,11 +102,16 @@ function Friends() {
 									<h3 className="friend-username">{getFriend(friend)}</h3>
 								</Link>
 							</div>
-							<ConfirmRemoveFriendModal
-								friend={friend}
-								setFriends={setFriends}
-								friends={friends}
-							/>
+							<div id={`b-${getId(friend)}`} className="action-buttons">
+								<Link to={`/messages/${getId(friend)}`}>
+									<i className="far fa-comment-alt"></i>
+								</Link>
+								<ConfirmRemoveFriendModal
+									friend={friend}
+									setFriends={setFriends}
+									friends={friends}
+								/>
+							</div>
 						</div>
 					))}
 			</div>

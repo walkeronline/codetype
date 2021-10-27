@@ -5,24 +5,45 @@ const { port } = require('../config');
 
 const app = require('../app');
 const db = require('../db/models');
+const { Message, User } = require('../db/models');
 
 // Socket
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: '*' } });
 
+io.on('connection', (socket) => {
+	console.log('User connected');
+
+	socket.on('msg', async (payload) => {
+		const message = await Message.create({
+			userId: payload.user.id,
+			friendId: payload.friendId,
+			message: payload.message,
+			createdAt: Date.now(),
+			updatedAt: Date.now(),
+		});
+
+		const response = await Message.findByPk(message.id, {
+			include: [
+				{
+					model: User,
+					as: 'userM',
+				},
+				{
+					model: User,
+					as: 'friendM',
+				},
+			],
+		});
+
+		io.emit('incoming', response);
+	});
+});
 // Check the database connection before starting the app
 db.sequelize
 	.authenticate()
 	.then(() => {
 		console.log('Database connection success! Sequelize is ready to use...');
-
-		io.on('connection', (socket) => {
-			console.log('User connected');
-
-			socket.on('msg', (arg) => {
-				io.emit('incoming', arg);
-			});
-		});
 
 		// Start listening for connections
 		app.listen(port, () => console.log(`Listening on port ${port}...`));

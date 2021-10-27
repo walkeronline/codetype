@@ -2007,7 +2007,8 @@ module.exports = {
       */
 		return queryInterface.bulkInsert(
 			'Messages',
-			createMessages({ numUsers: 12, numMessages: 200 }),
+			// createMessages({ numUsers: 12, numMessages: 200 }),
+			[],
 			{}
 		);
 	},

@@ -1,9 +1,117 @@
 .messages-container {
 	position: absolute;
-	top: 25%;
-	left: 45%;
+	top: 10%;
+	left: 30%;
+	border: 2px solid grey;
+	border-radius: 25px;
+	width: 35vw;
+	height: 85vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 .messages-container > form > input {
 	color: #000;
+}
+
+.messages-container > ul * {
+	list-style: none;
+}
+
+.messages-container > ul {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+.message-body.from {
+	background: #424242;
+	width: 250px;
+	max-width: fit-content;
+	word-wrap: break-word;
+	padding: 5px 12px;
+	border-radius: 20px;
+	border-bottom-left-radius: 5px;
+}
+.message-body.to {
+	background: #2241f2;
+	width: fit-content;
+	padding: 5px 12px;
+	border-radius: 20px;
+	border-bottom-right-radius: 5px;
+}
+
+li.to,
+li.from {
+	clear: both;
+	animation: slide-up-message 0.3s;
+}
+
+li.to {
+	float: right;
+	margin-right: 5px;
+}
+
+li.from {
+	float: left;
+	margin-left: 5px;
+}
+
+.message-input-box {
+	/* outline: 1px solid red; */
+	display: flex;
+	justify-content: center;
+	height: 50px;
+}
+
+.message-input-box > input {
+	width: 80%;
+	background: #fff;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	padding: 5px 10px;
+	outline: none;
+	border: none;
+	height: 40px;
+}
+
+.message-input-box > input:focus {
+	outline: none;
+}
+
+.message-input-box > button {
+	height: 40px;
+	width: 40px;
+	outline: none;
+	border: none;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	background: #fff;
+	margin: 0;
+	padding: 0;
+}
+
+.message-input-box > button:hover {
+	cursor: pointer;
+}
+
+.message-input-box > button > i {
+	color: #2241f2;
+	margin: 0;
+	padding: 0;
+}
+
+@keyframes slide-up-message {
+	0% {
+		opacity: 0%;
+		transform: translateY(10px);
+	}
+	100% {
+		opacity: 100%;
+		transform: translateY(0px);
+	}
 }

@@ -89,7 +89,18 @@
 
 .fa-minus-square {
 	color: red;
+	/* visibility: hidden; */
+}
+
+.action-buttons {
+	display: flex;
+	justify-content: space-around;
+	width: 50px;
 	visibility: hidden;
+}
+
+.fa-comment-alt:hover {
+	cursor: pointer;
 }
 
 .fa-minus-square:hover {
@@ -115,7 +126,7 @@
 }
 
 .start {
-	/* transform: translateY(34em); */
+	transform: translateY(57vh);
 }
 
 @keyframes slide-up {
