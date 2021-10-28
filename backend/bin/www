@@ -46,8 +46,9 @@ db.sequelize
 		console.log('Database connection success! Sequelize is ready to use...');
 
 		// Start listening for connections
-		app.listen(port, () => console.log(`Listening on port ${port}...`));
-		io.listen(8000);
+		// app.listen(port, () => console.log(`Listening on port ${port}...`));
+		httpServer.listen(port, () => console.log(`Listening on port ${port}...`));
+		// io.listen(8000);
 	})
 	.catch((err) => {
 		console.log('Database connection failure.');

@@ -17,7 +17,7 @@ function MessagesPage() {
 	const [messages, setMessages] = useState([]);
 
 	useEffect(() => {
-		socket = io('http://localhost:8000');
+		socket = io();
 
 		socket.on('incoming', (msg) => {
 			setMessages([...messages, msg]);
@@ -38,6 +38,11 @@ function MessagesPage() {
 	function sendMessage(e) {
 		e.preventDefault();
 
+		if (!message) {
+			e.target.children[0].className = 'error';
+			return (e.target.children[0].placeholder = 'Please enter a message');
+		}
+
 		const payload = {
 			user: { ...sessionUser },
 			friendId,
@@ -48,6 +53,8 @@ function MessagesPage() {
 		setMessage('');
 		const div = document.getElementById('message-list');
 		div.scrollTo(0, div.scrollHeight);
+		e.target.children[0].className = '';
+		e.target.children[0].placeholder = 'Type here';
 	}
 
 	function getClass(msg) {
@@ -86,7 +93,7 @@ function MessagesPage() {
 						type="text"
 						value={message}
 						onChange={(e) => setMessage(e.target.value)}
-						placeholder="Type message here"
+						placeholder="Type here"
 					></input>
 					<button type="submit">
 						<i className="fas fa-arrow-up fa-2x"></i>
