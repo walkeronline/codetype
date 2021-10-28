@@ -20,6 +20,15 @@ module.exports = {
 				allowNull: false,
 				type: Sequelize.STRING,
 			},
+			roomId: {
+				allowNull: false,
+				type: Sequelize.STRING,
+			},
+			read: {
+				allowNull: false,
+				type: Sequelize.BOOLEAN,
+				defaultValue: false,
+			},
 			createdAt: {
 				allowNull: false,
 				type: Sequelize.DATE,

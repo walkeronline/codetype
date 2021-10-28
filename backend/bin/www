@@ -13,12 +13,22 @@ const io = new Server(httpServer, { cors: { origin: '*' } });
 
 io.on('connection', (socket) => {
 	console.log('User connected');
+	socket.on('joinRoom', (roomId) => {
+		socket.join(roomId);
+		console.log(`Joined room ${roomId}`);
+	});
+
+	socket.on('leaveRoom', (roomId) => {
+		socket.leave(roomId);
+		console.log(`Left room ${roomId}`);
+	});
 
 	socket.on('msg', async (payload) => {
 		const message = await Message.create({
 			userId: payload.user.id,
 			friendId: payload.friendId,
 			message: payload.message,
+			roomId: payload.roomId,
 			createdAt: Date.now(),
 			updatedAt: Date.now(),
 		});
@@ -36,7 +46,9 @@ io.on('connection', (socket) => {
 			],
 		});
 
-		io.emit('incoming', response);
+		console.log(`Emitting ${response} to room ID ${payload.roomId}`);
+
+		io.to(payload.roomId).emit('incoming', response);
 	});
 });
 // Check the database connection before starting the app

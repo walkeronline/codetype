@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
 			userId: DataTypes.INTEGER,
 			friendId: DataTypes.INTEGER,
 			message: DataTypes.STRING,
+			roomId: DataTypes.STRING,
+			read: DataTypes.BOOLEAN,
 		},
 		{
 			sequelize,

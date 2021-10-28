@@ -67,6 +67,7 @@ function Friends() {
 	}, [sessionUser]);
 
 	function getId(friend) {
+		console.log(friend);
 		if (+friend.friendId === +sessionUser.id) {
 			return friend.userId;
 		}
@@ -97,13 +98,13 @@ function Friends() {
 									<img
 										className="friend-image"
 										src={checkProfile(friend)}
-										alt={`${friend?.friend?.username}'s profile`}
+										alt={`${friend?.username}'s profile`}
 									/>
 									<h3 className="friend-username">{getFriend(friend)}</h3>
 								</Link>
 							</div>
 							<div id={`b-${getId(friend)}`} className="action-buttons">
-								<Link to={`/messages/${getId(friend)}`}>
+								<Link to={`/messages/${sessionUser.id}/${getId(friend)}`}>
 									<i className="far fa-comment-alt"></i>
 								</Link>
 								<ConfirmRemoveFriendModal

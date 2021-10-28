@@ -65,7 +65,7 @@ function App() {
 							<Route exact path="/users/:userId">
 								<UserProfilePage />
 							</Route>
-							<Route exact path="/messages/:friendId">
+							<Route exact path="/messages/:userId/:friendId">
 								<MessagesPage />
 							</Route>
 						</>

@@ -51,6 +51,11 @@ li.to,
 li.from {
 	clear: both;
 	animation: slide-up-message 0.3s;
+	margin-top: 2px;
+}
+
+li.to > .message-body {
+	float: right;
 }
 
 li.to {
@@ -58,9 +63,20 @@ li.to {
 	margin-right: 5px;
 }
 
+li.to > .message-time {
+	clear: both;
+	float: right;
+}
+
 li.from {
 	float: left;
 	margin-left: 5px;
+}
+
+.message-time {
+	font-size: 12px;
+	color: #fff;
+	font-weight: bold;
 }
 
 .message-input-box {
@@ -78,7 +94,9 @@ li.from {
 	padding: 5px 10px;
 	outline: none;
 	border: none;
-	height: 40px;
+	min-height: 40px;
+	max-height: fit-content;
+	word-wrap: break-word;
 }
 
 .message-input-box > input.error::placeholder {
@@ -115,6 +133,22 @@ li.from {
 	background: #2241f2;
 	color: #fff; */
 /* } */
+
+.friend-chat-picture {
+	width: 50px;
+	height: auto;
+	border-radius: 100%;
+}
+
+.friend-info-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	border-bottom: 1px solid #fff;
+	padding-bottom: 5px;
+}
 
 @keyframes slide-up-message {
 	0% {

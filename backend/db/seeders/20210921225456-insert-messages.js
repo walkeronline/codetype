@@ -2008,7 +2008,15 @@ module.exports = {
 		return queryInterface.bulkInsert(
 			'Messages',
 			// createMessages({ numUsers: 12, numMessages: 200 }),
-			[],
+			[
+				{
+					userId: 1,
+					friendId: 2,
+					roomId: 0,
+					message: 'Hi',
+				},
+			],
+			// createMessages({numMessages=200, numUsers=6, maxMsgLength=30}),
 			{}
 		);
 	},
