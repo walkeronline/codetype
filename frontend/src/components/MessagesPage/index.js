@@ -130,15 +130,15 @@ function MessagesPage() {
 		const lastMessageTime = new Date(
 			getLastMessageFromUser()?.createdAt
 		).getTime();
-		if (!bypass) {
-			if (
-				lastMessageTime - messageDate < 300000 &&
-				(messages[messages.length - 1].userId === sessionUser.id ||
-					messages[messages.length - 1].friendId === sessionUser.id)
-			) {
-				return '';
-			}
-		}
+		// if (!bypass) {
+		// 	if (
+		// 		lastMessageTime - messageDate < 300000 &&
+		// 		(messages[messages.length - 1].userId === sessionUser.id ||
+		// 			messages[messages.length - 1].friendId === sessionUser.id)
+		// 	) {
+		// 		return '';
+		// 	}
+		// }
 		if (now - messageDate < 60000) {
 			return '';
 		}
