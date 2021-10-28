@@ -43,7 +43,7 @@ function MessagesPage() {
 			socket.emit('leaveRoom', roomId);
 			return socket.close();
 		};
-	}, [messages]);
+	}, [messages, roomId]);
 
 	useEffect(() => {
 		const div = document.getElementById('message-list');
@@ -55,9 +55,10 @@ function MessagesPage() {
 			// console.log(sessionUser.id, friendId);
 			const temp = await fetch(`/api/messages/${sessionUser.id}/${friendId}`);
 			const data = await temp.json();
+			const tempFriend = await fetch(`/api/users/${friendId}`);
+			const friendData = await tempFriend.json();
 			setMessages(data);
-			const tempFriend = data.find((msg) => +msg.userId === +friendId);
-			setFriend(tempFriend?.userM);
+			setFriend(friendData);
 		})();
 	}, [friendId, sessionUser.id]);
 
@@ -139,9 +140,9 @@ function MessagesPage() {
 		// 		return '';
 		// 	}
 		// }
-		if (now - messageDate < 60000) {
-			return '';
-		}
+		// if (now - messageDate < 60000) {
+		// 	return '';
+		// }
 		if (now - messageDate < 86400000) {
 			return new Date(msg?.createdAt).toLocaleTimeString([], {
 				hour: '2-digit',
