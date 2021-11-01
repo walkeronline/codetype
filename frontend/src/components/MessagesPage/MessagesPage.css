@@ -81,6 +81,7 @@ li.to {
 li.to > .message-time {
 	clear: both;
 	float: right;
+	display: flex;
 }
 
 li.from {
@@ -190,7 +191,6 @@ li.from {
 .msg-edit-buttons {
 	display: flex;
 	align-items: flex-end;
-	height: 30px;
 	margin-right: 5px;
 }
 

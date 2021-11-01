@@ -266,6 +266,14 @@ function MessagesPage({ friendId, showMessages, setShowMessages }) {
 						messages.map((msg, idx) => (
 							<li className={getClass(msg)} key={idx} id={idx}>
 								<div className="to-flex">
+									<div
+										className={`message-body ${getClass(msg)}`}
+										id={`msg-${msg.id}`}
+									>
+										{msg.message}
+									</div>
+								</div>
+								<div className="message-time">
 									{getClass(msg) === 'to' && (
 										<div className="msg-edit-buttons">
 											{/* <i
@@ -280,14 +288,6 @@ function MessagesPage({ friendId, showMessages, setShowMessages }) {
 											></i>
 										</div>
 									)}
-									<div
-										className={`message-body ${getClass(msg)}`}
-										id={`msg-${msg.id}`}
-									>
-										{msg.message}
-									</div>
-								</div>
-								<div className="message-time">
 									{getTime(msg)
 										? getTime(msg)
 										: idx === messages.length - 1
