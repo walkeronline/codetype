@@ -1,17 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { io } from 'socket.io-client';
 import AddFriendModal from '../AddFriendModal';
 
 import ConfirmRemoveFriendModal from '../ConfirmRemoveFriendModal';
+import MessagesPage from '../MessagesPage';
 
 import './Friends.css';
+
+let socket;
 
 function Friends() {
 	const sessionUser = useSelector((state) => state.session.user);
 
 	const [friends, setFriends] = useState(null);
 	const [showMenu, setShowMenu] = useState(false);
+	const [showMessages, setShowMessages] = useState(false);
+	const [currentMessage, setCurrentMessage] = useState(null);
+	const [statusChanges, setStatusChanges] = useState([]);
 
 	const checkProfile = (friend) => {
 		return friend?.friend?.imageUrl
@@ -25,6 +32,12 @@ function Friends() {
 		}
 		return <i className="fas fa-sort-up"></i>;
 	};
+
+	useEffect(() => {
+		window.onbeforeunload = (e) => {
+			socket.emit('log-out', sessionUser);
+		};
+	}, [sessionUser]);
 
 	const toggleMenu = () => {
 		const friendsList = document.querySelector('.friends-container');
@@ -51,10 +64,10 @@ function Friends() {
 	};
 
 	const getFriend = (friend) => {
-		if (friend?.friend?.username === sessionUser.username) {
-			return friend?.user?.username;
+		if (+friend?.friend?.id === +sessionUser.id) {
+			return friend?.user;
 		}
-		return friend?.friend?.username;
+		return friend?.friend;
 	};
 
 	useEffect(() => {
@@ -64,16 +77,45 @@ function Friends() {
 			setFriends(data);
 		}
 		getFriends();
-	}, [sessionUser]);
+	}, [sessionUser, statusChanges]);
+
+	useEffect(() => {
+		socket = io();
+
+		socket.on('new-log-in', (user) => {
+			setStatusChanges([...statusChanges, user]);
+		});
+		socket.on('new-log-out', (user) => {
+			setStatusChanges([...statusChanges, user]);
+		});
+		return () => {
+			return socket.close();
+		};
+	}, [sessionUser, statusChanges]);
 
 	function getId(friend) {
-		console.log(friend);
 		if (+friend.friendId === +sessionUser.id) {
 			return friend.userId;
 		}
 		return friend.friendId;
 	}
-	console.log(friends);
+
+	function insertMessages(friendId, friend) {
+		const messagesComponent = (
+			<MessagesPage
+				friendId={friendId}
+				showMessages={showMessages}
+				setShowMessages={setShowMessages}
+			></MessagesPage>
+		);
+		setShowMessages(true);
+		setCurrentMessage(messagesComponent);
+		// const containerEle = document.querySelector('#message-box-container');
+		// if (containerEle) {
+		// 	console.log(messagesComponent, typeof messagesComponent);
+		// 	// containerEle.appendChild(messagesComponent);
+		// }
+	}
 
 	return (
 		<div className="friends-container start">
@@ -91,22 +133,33 @@ function Friends() {
 							className="custom-spacing"
 							onMouseEnter={(e) => changeVis(getId(friend), 0)}
 							onMouseLeave={(e) => changeVis(getId(friend), 1)}
-							key={friend.friendId}
+							key={idx}
 						>
 							<div className="friend-info">
+								<div
+									className={`status ${
+										getFriend(friend).online ? 'online' : 'offline'
+									}`}
+								></div>
 								<Link className="friend-name" to={`/users/${getId(friend)}`}>
 									<img
 										className="friend-image"
 										src={checkProfile(friend)}
 										alt={`${friend?.username}'s profile`}
 									/>
-									<h3 className="friend-username">{getFriend(friend)}</h3>
+									<h3 className="friend-username">
+										{getFriend(friend).username}
+									</h3>
 								</Link>
 							</div>
 							<div id={`b-${getId(friend)}`} className="action-buttons">
-								<Link to={`/messages/${sessionUser.id}/${getId(friend)}`}>
-									<i className="far fa-comment-alt"></i>
-								</Link>
+								<i
+									className="far fa-comment-alt"
+									onClick={() => {
+										setShowMessages(true);
+										insertMessages(getId(friend));
+									}}
+								></i>
 								<ConfirmRemoveFriendModal
 									friend={friend}
 									setFriends={setFriends}
@@ -115,6 +168,7 @@ function Friends() {
 							</div>
 						</div>
 					))}
+				<div id="message-box-container">{showMessages && currentMessage}</div>
 			</div>
 		</div>
 	);

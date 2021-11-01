@@ -1,4 +1,4 @@
-.messages-container {
+/* .messages-container {
 	position: absolute;
 	top: 10%;
 	left: 30%;
@@ -12,6 +12,14 @@
 	padding-top: 10px;
 	padding-left: 10px;
 	padding-right: 10px;
+} */
+
+.messages-container {
+	margin: 20px 0px 0px 20px;
+}
+
+.message-list {
+	height: 50vh;
 }
 
 .messages-container > form > input {
@@ -25,8 +33,12 @@
 .messages-container > ul {
 	overflow-y: scroll;
 	overflow-x: hidden;
-	height: 100%;
+	height: 50vh;
 	margin-bottom: 10px;
+}
+
+.fa-times {
+	cursor: pointer;
 }
 
 .message-body.from {
@@ -37,6 +49,7 @@
 	padding: 5px 12px;
 	border-radius: 20px;
 	border-bottom-left-radius: 5px;
+	margin-top: 5px;
 }
 .message-body.to {
 	background: #2241f2;
@@ -46,6 +59,7 @@
 	padding: 5px 12px;
 	border-radius: 20px;
 	border-bottom-right-radius: 5px;
+	margin-top: 5px;
 }
 
 li.to,
@@ -143,12 +157,46 @@ li.from {
 
 .friend-info-container {
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	flex-direction: row-reverse;
+	justify-content: space-between;
+	align-items: flex-start;
 	width: 100%;
 	border-bottom: 1px solid #fff;
 	padding-bottom: 5px;
+}
+
+.user-typing {
+	color: #b5b5b5;
+	margin-bottom: 5px;
+	margin-left: 10px;
+	font-size: 13px;
+}
+
+.status.small {
+	left: 35px;
+	top: 15px;
+}
+
+.fa-trash-alt {
+	color: red;
+	cursor: pointer;
+}
+
+.fa-pencil-alt {
+	cursor: pointer;
+	margin-right: 5px;
+}
+
+.msg-edit-buttons {
+	display: flex;
+	align-items: flex-end;
+	height: 30px;
+	margin-right: 5px;
+}
+
+.to-flex {
+	display: flex;
+	flex-direction: row;
 }
 
 @keyframes slide-up-message {
@@ -159,5 +207,26 @@ li.from {
 	100% {
 		opacity: 100%;
 		transform: translateY(0px);
+	}
+}
+.user-typing.typing::after {
+	overflow: hidden;
+	display: inline-block;
+	vertical-align: bottom;
+	-webkit-animation: ellipsis steps(4, end) 1.3s infinite;
+	animation: ellipsis steps(4, end) 1.3s infinite;
+	content: '...';
+	width: 0px;
+}
+
+@keyframes ellipsis {
+	to {
+		width: 13px;
+	}
+}
+
+@-webkit-keyframes ellipsis {
+	to {
+		width: 13px;
 	}
 }

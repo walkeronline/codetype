@@ -11,23 +11,51 @@ import './MessagesPage.css';
 
 let socket;
 
-function MessagesPage() {
+function MessagesPage({ friendId, showMessages, setShowMessages }) {
 	const sessionUser = useSelector((state) => state.session.user);
-	const { friendId } = useParams();
 
 	const [friend, setFriend] = useState(null);
 	const [message, setMessage] = useState('');
 	const [messages, setMessages] = useState([]);
 	const [roomId, setRoomId] = useState(null);
+	const [isTyping, setIsTyping] = useState(false);
+	const [typingString, setTypingString] = useState('');
+	const [newMessage, setNewMessage] = useState('');
 
 	useEffect(() => {
-		const div = document.getElementById('message-list');
-		div.scrollTo(0, div.scrollHeight * 2);
-	}, []);
+		if (message !== '') {
+			setIsTyping(true);
+		} else {
+			setIsTyping(false);
+		}
+		console.log(isTyping);
+	}, [isTyping, message]);
+
+	useEffect(() => {
+		const chats = document.getElementsByClassName('message-list');
+		if (chats) {
+			Array.from(chats).forEach((ele) => ele.scrollTo(0, ele.scrollHeight * 2));
+		}
+	}, [showMessages, friendId, setShowMessages, messages]);
 
 	useEffect(() => {
 		setRoomId(getRoomId(sessionUser?.id, friendId));
 	}, [sessionUser, friendId]);
+
+	useEffect(() => {
+		const payload = {
+			roomId,
+			user: sessionUser,
+		};
+		if (isTyping) {
+			socket?.emit('userTyping', payload);
+			console.log('STARTED');
+		} else {
+			console.log('STOPPED');
+			console.log(socket);
+			socket?.emit('userStoppedTyping', payload);
+		}
+	}, [isTyping, roomId, sessionUser]);
 
 	useEffect(() => {
 		socket = io();
@@ -36,7 +64,24 @@ function MessagesPage() {
 
 		socket.on('incoming', (msg) => {
 			setMessages([...messages, msg]);
-			// console.log(msg);
+		});
+
+		socket.on('showTyping', (payload) => {
+			setTypingString(`${payload.username} is typing`);
+		});
+
+		socket.on('hideTyping', (payload) => {
+			setTypingString('');
+		});
+
+		socket.on('msg-deleted', (msgId) => {
+			const newMessages = messages.filter((msg) => msg.id !== msgId);
+			setMessages(newMessages);
+		});
+
+		socket.on('msg-edited', (newMsg) => {
+			const newMessages = messages.filter((msg) => msg.id !== newMsg.id);
+			setMessages(newMessages);
 		});
 
 		return () => {
@@ -47,12 +92,11 @@ function MessagesPage() {
 
 	useEffect(() => {
 		const div = document.getElementById('message-list');
-		div.scrollTo(0, div.scrollHeight * 2);
+		div?.scrollTo(0, div.scrollHeight * 2);
 	}, [messages]);
 
 	useEffect(() => {
 		(async () => {
-			// console.log(sessionUser.id, friendId);
 			const temp = await fetch(`/api/messages/${sessionUser.id}/${friendId}`);
 			const data = await temp.json();
 			const tempFriend = await fetch(`/api/users/${friendId}`);
@@ -69,11 +113,39 @@ function MessagesPage() {
 		return crypto.createHash('sha256').update(toHash).digest('hex');
 	}
 
+	function delMessage(e, msgId) {
+		e.preventDefault();
+		e.stopPropagation();
+		if (socket) {
+			socket.emit('del-msg', { msgId, roomId });
+		}
+	}
+
+	// function editMessage(e, msgId) {
+	// 	e.preventDefault();
+	// 	e.stopPropagation();
+	// 	if (socket) {
+	// 		socket.emit('edit-msg', { msgId, roomId });
+	// 	}
+	// }
+
+	// function editForm(msgId) {
+	// 	const editBox = document.getElementById(`msg-${msgId}`);
+	// 	const oldMessage = editBox.innerText;
+	// 	const form = (
+	// 		<form onSubmit={(e) => editMessage(e, msgId)}>
+	// 			<input
+	// 				type="text"
+	// 				value={oldMessage}
+	// 				onChange={(e) => setNewMessage(e.target.value)}
+	// 			></input>
+	// 		</form>
+	// 	);
+	// }
+
 	function sendMessage(e) {
 		e.preventDefault();
 		const input = e.target.children[0];
-
-		console.log(message.length);
 
 		if (!message) {
 			input.className = 'error';
@@ -106,6 +178,8 @@ function MessagesPage() {
 
 		socket.emit('msg', payload);
 		setMessage('');
+		setIsTyping(false);
+		setTypingString('');
 		e.target.children[0].className = '';
 		e.target.children[0].placeholder = 'Type here';
 	}
@@ -131,53 +205,87 @@ function MessagesPage() {
 		const lastMessageTime = new Date(
 			getLastMessageFromUser()?.createdAt
 		).getTime();
-		// if (!bypass) {
-		// 	if (
-		// 		lastMessageTime - messageDate < 300000 &&
-		// 		(messages[messages.length - 1].userId === sessionUser.id ||
-		// 			messages[messages.length - 1].friendId === sessionUser.id)
-		// 	) {
-		// 		return '';
-		// 	}
-		// }
-		// if (now - messageDate < 60000) {
-		// 	return '';
-		// }
 		if (now - messageDate < 86400000) {
 			return new Date(msg?.createdAt).toLocaleTimeString([], {
 				hour: '2-digit',
 				minute: '2-digit',
 			});
 		}
+		return getNumDaysPassed(msg?.updatedAt);
+	}
+
+	function getNumDaysPassed(date) {
+		const now = new Date(Date.now()).getTime();
+		const tempDate = new Date(date).getTime();
+		const timeDiff = now - tempDate;
+		const numDays = Math.round(timeDiff / 86400000);
+		if (numDays === 1) {
+			return `1 day ago`;
+		}
+		if (numDays < 31) {
+			return `${numDays} days ago`;
+		}
+		if (numDays < 365) {
+			const months = Math.round(numDays / 30);
+			if (months === 1) {
+				return `1 month ago`;
+			}
+			return `${months} months ago`;
+		}
+		return `Over a year ago`;
 	}
 
 	return (
 		<>
-			{/* <h2>{`Messages with user ${friendId}`}</h2> */}
 			<div className="messages-container">
 				<div className="friend-info-container">
-					<Link to={`/users/${friend?.id}`}>
-						<img
-							className="friend-chat-picture"
-							src={
-								'https://lh3.googleusercontent.com/Q3TExTusD0FdRQL-Y_sobhGB09x-Bw-kMsSsd2Y1RpXu91XMbyAxNqBgPFWEEWlVYhvR5xTKHGP3CvhLjiwgyE-cr-w_p42M54W55w=w600'
-							}
-							alt={`${friend?.username}'s profile`}
-						/>
-					</Link>
-					<h4>{friend?.username}</h4>
+					<i
+						onClick={() => setShowMessages(false)}
+						className="fas fa-times"
+					></i>
+					<div className="message-icon-name-container">
+						<div
+							className={`status small ${
+								friend && friend?.online ? 'online' : 'offline'
+							}`}
+						></div>
+						<Link to={`/users/${friend?.id}`}>
+							<img
+								className="friend-chat-picture"
+								src={
+									'https://lh3.googleusercontent.com/Q3TExTusD0FdRQL-Y_sobhGB09x-Bw-kMsSsd2Y1RpXu91XMbyAxNqBgPFWEEWlVYhvR5xTKHGP3CvhLjiwgyE-cr-w_p42M54W55w=w600'
+								}
+								alt={`${friend?.username}'s profile`}
+							/>
+						</Link>
+						<h4>{friend?.username}</h4>
+					</div>
 				</div>
-				<ul id="message-list">
+				<ul className="message-list">
 					{messages &&
 						messages.map((msg, idx) => (
 							<li className={getClass(msg)} key={idx} id={idx}>
-								{/* <h4>
-									{getClass(msg) === 'to'
-										? ''
-										: getTime(msg) && msg.userM.username}
-								</h4> */}
-								<div className={`message-body ${getClass(msg)}`}>
-									{msg.message}
+								<div className="to-flex">
+									{getClass(msg) === 'to' && (
+										<div className="msg-edit-buttons">
+											{/* <i
+												onClick={(e) => editForm(e)}
+												id={`edit${msg.id}`}
+												className="fas fa-pencil-alt"
+											></i> */}
+											<i
+												onClick={(e) => delMessage(e, msg.id)}
+												id={`del${msg.id}`}
+												className="far fa-trash-alt"
+											></i>
+										</div>
+									)}
+									<div
+										className={`message-body ${getClass(msg)}`}
+										id={`msg-${msg.id}`}
+									>
+										{msg.message}
+									</div>
 								</div>
 								<div className="message-time">
 									{getTime(msg)
@@ -189,6 +297,9 @@ function MessagesPage() {
 							</li>
 						))}
 				</ul>
+				<div className={`user-typing${typingString ? ' typing' : ''}`}>
+					{typingString}
+				</div>
 				<form className="message-input-box" onSubmit={sendMessage}>
 					<input
 						type="text"
