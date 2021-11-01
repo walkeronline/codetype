@@ -2012,8 +2012,38 @@ module.exports = {
 				{
 					userId: 1,
 					friendId: 2,
-					roomId: 0,
-					message: 'Hi',
+					roomId:
+						'6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918',
+					message: 'Very old message',
+					createdAt: new Date('2020-09-29 20:52:56.602-05'),
+					updatedAt: new Date('2020-09-29 20:52:56.602-05'),
+				},
+				{
+					userId: 2,
+					friendId: 1,
+					roomId:
+						'6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918',
+					message: 'Old message',
+					createdAt: new Date('2021-05-01 20:52:56.602-05'),
+					updatedAt: new Date('2021-05-01 20:52:56.602-05'),
+				},
+				{
+					userId: 2,
+					friendId: 1,
+					roomId:
+						'6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918',
+					message: 'Recent message',
+					createdAt: new Date('2021-10-20 20:52:56.602-05'),
+					updatedAt: new Date('2021-10-20 20:52:56.602-05'),
+				},
+				{
+					userId: 1,
+					friendId: 2,
+					roomId:
+						'6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918',
+					message: 'Month old',
+					createdAt: new Date('2021-09-30 20:52:56.602-05'),
+					updatedAt: new Date('2021-09-30 20:52:56.602-05'),
 				},
 			],
 			// createMessages({numMessages=200, numUsers=6, maxMsgLength=30}),
