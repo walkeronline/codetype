@@ -27,17 +27,29 @@
 
 	display: flex;
 	flex-direction: column;
-	height: 50vh;
+	height: 55vh;
 }
 
 .friends-container {
 	position: absolute;
-	z-index: 1000;
+	z-index: 999;
 	right: 0;
 	bottom: 0;
 	width: 300px;
 	background: #262626;
 	margin: 20px 10px 0px 10px;
+	padding: 20px 15px 0px 15px;
+	border-radius: 20px 20px 0px 0px;
+}
+
+.messages-container {
+	position: absolute;
+	z-index: 1001;
+	right: 0;
+	bottom: 0;
+	width: 300px;
+	background: #262626;
+	/* margin: 20px 10px 0px 10px; */
 	padding: 20px 15px 0px 15px;
 	border-radius: 20px 20px 0px 0px;
 }
@@ -89,7 +101,18 @@
 
 .fa-minus-square {
 	color: red;
+	/* visibility: hidden; */
+}
+
+.action-buttons {
+	display: flex;
+	justify-content: space-around;
+	width: 50px;
 	visibility: hidden;
+}
+
+.fa-comment-alt:hover {
+	cursor: pointer;
 }
 
 .fa-minus-square:hover {
@@ -115,7 +138,26 @@
 }
 
 .start {
-	/* transform: translateY(34em); */
+	transform: translateY(57vh);
+}
+
+.status {
+	width: 15px;
+	height: 15px;
+	border-radius: 100%;
+	position: relative;
+	top: 25px;
+	left: 35px;
+	border: 3px solid #262626;
+	z-index: 1000;
+}
+
+.status.online {
+	background: green;
+}
+
+.status.offline {
+	background: red;
 }
 
 @keyframes slide-up {

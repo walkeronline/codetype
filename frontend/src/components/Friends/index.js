@@ -1,17 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { io } from 'socket.io-client';
 import AddFriendModal from '../AddFriendModal';
 
 import ConfirmRemoveFriendModal from '../ConfirmRemoveFriendModal';
+import MessagesPage from '../MessagesPage';
 
 import './Friends.css';
+
+let socket;
 
 function Friends() {
 	const sessionUser = useSelector((state) => state.session.user);
 
 	const [friends, setFriends] = useState(null);
-	const [showMenu, setShowMenu] = useState(true);
+	const [showMenu, setShowMenu] = useState(false);
+	const [showMessages, setShowMessages] = useState(false);
+	const [currentMessage, setCurrentMessage] = useState(null);
+	const [statusChanges, setStatusChanges] = useState([]);
 
 	const checkProfile = (friend) => {
 		return friend?.friend?.imageUrl
@@ -25,6 +32,12 @@ function Friends() {
 		}
 		return <i className="fas fa-sort-up"></i>;
 	};
+
+	useEffect(() => {
+		window.onbeforeunload = (e) => {
+			socket.emit('log-out', sessionUser);
+		};
+	}, [sessionUser]);
 
 	const toggleMenu = () => {
 		const friendsList = document.querySelector('.friends-container');
@@ -44,17 +57,17 @@ function Friends() {
 	};
 
 	const changeVis = (id, type) => {
-		const removeButton = document.querySelector(`#f-${id}`);
+		const removeButton = document.querySelector(`#b-${id}`);
 		if (removeButton) {
 			removeButton.style.visibility = type === 0 ? 'visible' : 'hidden';
 		}
 	};
 
 	const getFriend = (friend) => {
-		if (friend?.friend?.username === sessionUser.username) {
-			return friend?.user?.username;
+		if (+friend?.friend?.id === +sessionUser.id) {
+			return friend?.user;
 		}
-		return friend?.friend?.username;
+		return friend?.friend;
 	};
 
 	useEffect(() => {
@@ -64,10 +77,48 @@ function Friends() {
 			setFriends(data);
 		}
 		getFriends();
-	}, [sessionUser]);
+	}, [sessionUser, statusChanges]);
+
+	useEffect(() => {
+		socket = io();
+
+		socket.on('new-log-in', (user) => {
+			setStatusChanges([...statusChanges, user]);
+		});
+		socket.on('new-log-out', (user) => {
+			setStatusChanges([...statusChanges, user]);
+		});
+		return () => {
+			return socket.close();
+		};
+	}, [sessionUser, statusChanges]);
+
+	function getId(friend) {
+		if (+friend.friendId === +sessionUser.id) {
+			return friend.userId;
+		}
+		return friend.friendId;
+	}
+
+	function insertMessages(friendId, friend) {
+		const messagesComponent = (
+			<MessagesPage
+				friendId={friendId}
+				showMessages={showMessages}
+				setShowMessages={setShowMessages}
+			></MessagesPage>
+		);
+		setShowMessages(true);
+		setCurrentMessage(messagesComponent);
+		// const containerEle = document.querySelector('#message-box-container');
+		// if (containerEle) {
+		// 	console.log(messagesComponent, typeof messagesComponent);
+		// 	// containerEle.appendChild(messagesComponent);
+		// }
+	}
 
 	return (
-		<div className="friends-container opened">
+		<div className="friends-container start">
 			<div className="menu-expand" onClick={toggleMenu}>
 				{getIcon()}
 			</div>
@@ -77,33 +128,47 @@ function Friends() {
 			</div>
 			<div className="friends-list">
 				{friends &&
-					friends.map((friend) => (
+					friends.map((friend, idx) => (
 						<div
 							className="custom-spacing"
-							onMouseEnter={(e) => changeVis(friend?.friend?.id, 0)}
-							onMouseLeave={(e) => changeVis(friend?.friend?.id, 1)}
-							key={friend.id}
+							onMouseEnter={(e) => changeVis(getId(friend), 0)}
+							onMouseLeave={(e) => changeVis(getId(friend), 1)}
+							key={idx}
 						>
 							<div className="friend-info">
-								<Link
-									className="friend-name"
-									to={`/users/${friend?.friend?.id}`}
-								>
+								<div
+									className={`status ${
+										getFriend(friend).online ? 'online' : 'offline'
+									}`}
+								></div>
+								<Link className="friend-name" to={`/users/${getId(friend)}`}>
 									<img
 										className="friend-image"
 										src={checkProfile(friend)}
-										alt={`${friend?.friend?.username}'s profile`}
+										alt={`${friend?.username}'s profile`}
 									/>
-									<h3 className="friend-username">{getFriend(friend)}</h3>
+									<h3 className="friend-username">
+										{getFriend(friend).username}
+									</h3>
 								</Link>
 							</div>
-							<ConfirmRemoveFriendModal
-								friend={friend}
-								setFriends={setFriends}
-								friends={friends}
-							/>
+							<div id={`b-${getId(friend)}`} className="action-buttons">
+								<i
+									className="far fa-comment-alt"
+									onClick={() => {
+										setShowMessages(true);
+										insertMessages(getId(friend));
+									}}
+								></i>
+								<ConfirmRemoveFriendModal
+									friend={friend}
+									setFriends={setFriends}
+									friends={friends}
+								/>
+							</div>
 						</div>
 					))}
+				<div id="message-box-container">{showMessages && currentMessage}</div>
 			</div>
 		</div>
 	);

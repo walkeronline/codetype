@@ -13,9 +13,11 @@ import UTestPage from './components/UTestPage';
 import AllTestPage from './components/AllTestPage';
 import NotFound from './components/NotFound';
 import UserProfilePage from './components/UserProfilePage';
+import { io } from 'socket.io-client';
 
 import { useHistory } from 'react-router';
 import NewTestPage from './components/NewTestPage';
+import MessagesPage from './components/MessagesPage';
 
 function App() {
 	const dispatch = useDispatch();
@@ -24,6 +26,18 @@ function App() {
 	const sessionUser = useSelector((state) => state.session.user);
 
 	const history = useHistory();
+
+	useEffect(() => {
+		const socket = io();
+
+		if (sessionUser) {
+			socket.emit('reconnect', sessionUser);
+		}
+
+		return () => {
+			return socket.close();
+		};
+	}, [sessionUser]);
 
 	useEffect(() => {
 		dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
@@ -64,6 +78,9 @@ function App() {
 							<Route exact path="/users/:userId">
 								<UserProfilePage />
 							</Route>
+							{/* <Route exact path="/messages/:userId/:friendId">
+								<MessagesPage />
+							</Route> */}
 						</>
 					)}
 					<Route>

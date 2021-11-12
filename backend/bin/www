@@ -1,20 +1,125 @@
 #!/usr/bin/env node
-
+const { createServer } = require('http');
+const { Server } = require('socket.io');
 const { port } = require('../config');
 
 const app = require('../app');
 const db = require('../db/models');
+const { Message, User } = require('../db/models');
 
+// Socket
+const httpServer = createServer(app);
+const io = new Server(httpServer, { cors: { origin: '*' } });
+
+io.on('connection', async (socket) => {
+	console.log('User connected');
+
+	socket.on('reconnect', async (user) => {
+		const tempUser = await User.findByPk(user.id);
+		tempUser.online = true;
+		await tempUser.save();
+		console.log('User logged in');
+		io.emit('new-log-in', tempUser);
+	});
+
+	socket.on('joinRoom', (roomId) => {
+		socket.join(roomId);
+		console.log(`Joined room ${roomId}`);
+	});
+
+	socket.on('leaveRoom', (roomId) => {
+		socket.leave(roomId);
+		console.log(`Left room ${roomId}`);
+	});
+
+	socket.on('userTyping', (payload) => {
+		console.log(`${payload.user.username} started typing`);
+		socket.to(payload.roomId).emit('showTyping', payload.user);
+	});
+
+	socket.on('userStoppedTyping', (payload) => {
+		console.log(`${payload.user.username} stopped typing`);
+		socket.to(payload.roomId).emit('hideTyping', payload.user);
+	});
+
+	socket.on('log-in', async (user) => {
+		const tempUser = await User.findByPk(user.id);
+		tempUser.online = true;
+		await tempUser.save();
+		console.log('User logged in');
+		io.emit('new-log-in', tempUser);
+	});
+
+	socket.on('log-out', async (user) => {
+		const tempUser = await User.findByPk(user.id);
+		tempUser.online = false;
+		await tempUser.save();
+		console.log('User logged out');
+		io.emit('new-log-out', tempUser);
+	});
+
+	socket.on('del-msg', async ({ msgId, roomId }) => {
+		const tempMsg = await Message.findByPk(msgId);
+		if (tempMsg) {
+			await tempMsg.destroy();
+		}
+		console.log(`Message ${msgId} deleted`);
+		io.to(roomId).emit('msg-deleted', msgId);
+	});
+
+	socket.on('edit-msg', async ({ msgId, roomId, newMsg }) => {
+		const tempMsg = await Message.findByPk(msgId);
+		if (tempMsg) {
+			tempMsg.message = newMsg;
+			await tempMsg.save();
+		}
+		io.to(roomId).emit('msg-edited', tempMsg);
+	});
+
+	socket.on('msg', async (payload) => {
+		const message = await Message.create({
+			userId: payload.user.id,
+			friendId: payload.friendId,
+			message: payload.message,
+			roomId: payload.roomId,
+			createdAt: Date.now(),
+			updatedAt: Date.now(),
+		});
+
+		const response = await Message.findByPk(message.id, {
+			include: [
+				{
+					model: User,
+					as: 'userM',
+				},
+				{
+					model: User,
+					as: 'friendM',
+				},
+			],
+		});
+
+		console.log(`Emitting ${response} to room ID ${payload.roomId}`);
+		socket.to(payload.roomId).emit('hideTyping', payload);
+		io.to(payload.roomId).emit('incoming', response);
+	});
+
+	socket.on('disconnect', async (reason) => {
+		console.log('User disconnected');
+	});
+});
 // Check the database connection before starting the app
 db.sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Database connection success! Sequelize is ready to use...');
+	.authenticate()
+	.then(() => {
+		console.log('Database connection success! Sequelize is ready to use...');
 
-    // Start listening for connections
-    app.listen(port, () => console.log(`Listening on port ${port}...`));
-  })
-  .catch((err) => {
-    console.log('Database connection failure.');
-    console.error(err);
-  });
+		// Start listening for connections
+		// app.listen(port, () => console.log(`Listening on port ${port}...`));
+		httpServer.listen(port, () => console.log(`Listening on port ${port}...`));
+		// io.listen(8000);
+	})
+	.catch((err) => {
+		console.log('Database connection failure.');
+		console.error(err);
+	});

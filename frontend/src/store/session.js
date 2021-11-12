@@ -1,4 +1,5 @@
 import { csrfFetch } from './csrf.js';
+import { io } from 'socket.io-client';
 
 const SET_USER = 'session/setUser';
 const REMOVE_USER = 'session/removeUser';
@@ -15,11 +16,14 @@ const removeUser = () => ({
 export const login =
 	({ credential, password }) =>
 	async (dispatch) => {
+		const socket = io();
 		const response = await csrfFetch('/api/session', {
 			method: 'POST',
 			body: JSON.stringify({ credential, password }),
 		});
 		const data = await response.json();
+		socket.emit('log-in', data.user);
+		socket.disconnect();
 		dispatch(setUser(data.user));
 		return response;
 	};
@@ -32,6 +36,7 @@ export const restoreUser = () => async (dispatch) => {
 };
 
 export const signup = (user) => async (dispatch) => {
+	const socket = io();
 	const { username, email, password } = user;
 	const response = await csrfFetch('/api/users', {
 		method: 'POST',
@@ -42,11 +47,16 @@ export const signup = (user) => async (dispatch) => {
 		}),
 	});
 	const data = await response.json();
+	socket.emit('log-in', data.user);
+	socket.disconnect();
 	dispatch(setUser(data.user));
 	return response;
 };
 
-export const logout = () => async (dispatch) => {
+export const logout = (sessionUser) => async (dispatch) => {
+	const socket = io();
+	socket.emit('log-out', sessionUser);
+	// socket.disconnect();
 	const response = await csrfFetch('/api/session', {
 		method: 'DELETE',
 	});
